@@ -14,7 +14,7 @@ export type ILogs = {
 };
 
 export type IItem = {
-  qr: string;
+  inventorynumber: string;
   supplier: string;
   name: string;
   person?: number;

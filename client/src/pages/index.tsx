@@ -12,8 +12,20 @@ import Row from "../components/Table/Row";
 import { IItem } from "../types/item";
 
 const rows: IItem[] = [
-  { qr: "00001", supplier: "АО ДиМ", name: "Позиция 1", person: 1, status: 1 },
-  { qr: "00002", supplier: "АО ДиМ2", name: "Позиция 2", person: 2, status: 2 },
+  {
+    inventorynumber: "00001",
+    supplier: "АО ДиМ",
+    name: "Позиция 1",
+    person: 1,
+    status: 1,
+  },
+  {
+    inventorynumber: "00002",
+    supplier: "АО ДиМ2",
+    name: "Позиция 2",
+    person: 2,
+    status: 2,
+  },
 ];
 
 const Home: NextPage = () => {
@@ -24,8 +36,8 @@ const Home: NextPage = () => {
           <TableRow>
             <TableCell />
             <TableCell>QR номер</TableCell>
-            <TableCell align="right">Поставщик</TableCell>
             <TableCell align="right">Название</TableCell>
+            <TableCell align="right">Поставщик</TableCell>
             <TableCell align="right">МОЛ</TableCell>
             <TableCell align="right">Статус</TableCell>
           </TableRow>
