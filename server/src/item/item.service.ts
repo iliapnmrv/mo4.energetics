@@ -10,6 +10,7 @@ import { Person } from './models/persons.model';
 import { Type } from './models/types.model';
 
 // https://github.com/typeorm/typeorm/blob/master/docs/select-query-builder.md
+// https://stackoverflow.com/questions/20156045/get-values-from-associated-table-with-sequelize-js
 
 @Injectable()
 export class ItemService {
@@ -18,21 +19,9 @@ export class ItemService {
   async getAll(): Promise<any> {
     console.log('getting');
 
-    return await this.itemsRepository.findAll({
-      subQuery: false,
-      include: [
-        {
-          model: Person,
-          required: true,
-        },
-        {
-          model: Type,
-          required: true,
-        },
-      ],
-    });
-
-    // return await this.itemsRepository.sequelize.query('select * from items');
+    return await this.itemsRepository.sequelize.query(
+      `select * from items left join persons on items.person_id = persons.personId`,
+    );
   }
 
   async getOne(id: number): Promise<Item> {
@@ -44,6 +33,8 @@ export class ItemService {
   }
 
   async createItem(dto: CreateItemDto): Promise<Item> {
+    console.log(dto);
+
     const item = await this.itemsRepository.create(dto);
     return item;
   }

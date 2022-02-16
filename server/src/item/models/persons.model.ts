@@ -26,7 +26,6 @@ export class Person extends Model<Person> {
 
   @Column({
     type: DataType.INTEGER,
-    primaryKey: true,
   })
   personId: number;
 
@@ -34,7 +33,4 @@ export class Person extends Model<Person> {
     type: DataType.STRING,
   })
   personName: string;
-
-  @BelongsTo(() => Item, { foreignKey: 'person' })
-  items: Item[];
 }

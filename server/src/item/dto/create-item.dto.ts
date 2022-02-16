@@ -4,9 +4,9 @@ export type CreateItemDto = {
   dateofdelivery: Date;
   guaranteeperiod: Date;
   supplier: string;
-  placeId?: number;
-  personId?: number;
-  statusId?: number;
-  typeId?: number;
+  place_id?: number;
+  person_id?: number;
+  status_id?: number;
+  type_id?: number;
   description?: string;
 };

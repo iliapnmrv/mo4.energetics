@@ -41,7 +41,4 @@ export class Status extends Model<Status> {
     type: DataType.DATE,
   })
   updatedAt: Date;
-
-  @HasMany(() => Item)
-  item: Item[];
 }

@@ -1,16 +1,4 @@
-import {
-  Column,
-  DataType,
-  ForeignKey,
-  HasMany,
-  HasOne,
-  Model,
-  Table,
-} from 'sequelize-typescript';
-import { Person } from './persons.model';
-import { Place } from './places.model';
-import { Status } from './statuses.model';
-import { Type } from './types.model';
+import { Column, DataType, Model, Table } from 'sequelize-typescript';
 
 interface ItemCreationAttrs {
   name: string;
@@ -18,10 +6,10 @@ interface ItemCreationAttrs {
   dateofdelivery: Date;
   guaranteeperiod: Date;
   supplier: string;
-  type: number;
-  placeId: number;
-  person: number;
-  statusId: number;
+  type_id: number;
+  place_id: number;
+  person_id: number;
+  status_id: number;
   description?: string;
 }
 
@@ -62,29 +50,25 @@ export class Item extends Model<Item, ItemCreationAttrs> {
   })
   supplier: string;
 
-  @HasMany(() => Type, { foreignKey: 'typeId', as: 'typeId' })
   @Column({
     type: DataType.INTEGER,
   })
-  type: number;
+  type_id: number;
 
-  @HasMany(() => Person, { foreignKey: 'personId', as: 'personId' })
   @Column({
     type: DataType.INTEGER,
   })
-  person: number;
+  person_id: number;
 
-  @ForeignKey(() => Status)
   @Column({
     type: DataType.INTEGER,
   })
-  statusId: number;
+  status_id: number;
 
-  @ForeignKey(() => Place)
   @Column({
     type: DataType.INTEGER,
   })
-  placeId: number;
+  place_id: number;
 
   @Column({
     type: DataType.STRING,
