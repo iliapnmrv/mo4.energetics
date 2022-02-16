@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { InjectRepository } from '@nestjs/typeorm';
+import sequelize from 'sequelize';
 import { where } from 'sequelize/types';
 import { Item } from 'src/item/models/item.model';
 import { Repository } from 'typeorm';
@@ -21,6 +22,7 @@ export class ItemService {
 
     return await this.itemsRepository.sequelize.query(
       `select * from items left join persons on items.person_id = persons.personId`,
+      { type: sequelize.QueryTypes.SELECT, raw: true },
     );
   }
 
