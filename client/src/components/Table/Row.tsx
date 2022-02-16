@@ -11,10 +11,14 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
 import Link from "next/link";
-import { IItem, ILogs } from "../../types/item";
+import { IItem } from "pages";
+import { ILogs } from "types/item";
 
-export default function Row(props: { row: IItem }) {
-  const { row } = props;
+type Props = {
+  row: IItem;
+};
+
+export default function Row({ row }: Props) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -30,8 +34,8 @@ export default function Row(props: { row: IItem }) {
           </IconButton>
         </TableCell>
         <TableCell>
-          <Link href={`${row.qr}`}>
-            <a>{row.qr}</a>
+          <Link href={`${row.inventorynumber}`}>
+            <a>{row.inventorynumber}</a>
           </Link>
         </TableCell>
         <TableCell component="th" scope="row">

@@ -1,19 +1,30 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
-import { Item } from 'src/item/entities/item.entity';
+import { CreateItemDto } from './dto/create-item.dto';
+import { UpdateItemDto } from './dto/update-item.dto';
 import { ItemService } from './item.service';
 
-@Controller('item')
+@Controller('items')
 export class ItemController {
   constructor(private service: ItemService) {}
 
   @Get(':id')
   getOne(@Param() params) {
-    return this.service.getItem(params.id);
+    return this.service.getOne(params.id);
   }
 
-  @Get('')
-  getAll(@Param() params) {
-    return this.service.getItems(params.id);
+  @Get()
+  getAll() {
+    return this.service.getAll();
+  }
+
+  @Post(':id')
+  updateItem(@Param('id') id, @Body() itemDto: UpdateItemDto) {
+    return this.service.updateItem(id, itemDto);
+  }
+
+  @Post()
+  createItem(@Body() itemDto: CreateItemDto) {
+    return this.service.createItem(itemDto);
   }
 
   //   @Post()

@@ -9,35 +9,39 @@ import Paper from "@mui/material/Paper";
 
 import { NextPage } from "next";
 import Row from "../components/Table/Row";
-import { IItem } from "../types/item";
+import $api from "../http";
+import { ILogs } from "../types/item";
 
-const rows: IItem[] = [
-  {
-    inventorynumber: "00001",
-    supplier: "АО ДиМ",
-    name: "Позиция 1",
-    person: 1,
-    status: 1,
-  },
-  {
-    inventorynumber: "00002",
-    supplier: "АО ДиМ2",
-    name: "Позиция 2",
-    person: 2,
-    status: 2,
-  },
-];
+export type IItem = {
+  inventorynumber: string;
+  supplier: string;
+  name: string;
+  person?: number;
+  status?: number;
+  history?: ILogs[];
+};
 
-const Home: NextPage = () => {
+export async function getStaticProps() {
+  const { data: rows } = await $api.get<IItem[]>(`item`);
+  return {
+    props: { rows }, // will be passed to the page component as props
+  };
+}
+
+type Props = {
+  rows: IItem[];
+};
+
+const Home: React.FC<Props> = ({ rows }: Props) => {
   return (
     <TableContainer component={Paper}>
       <Table aria-label="collapsible table">
         <TableHead>
           <TableRow>
             <TableCell />
-            <TableCell>QR номер</TableCell>
-            <TableCell align="right">Название</TableCell>
-            <TableCell align="right">Поставщик</TableCell>
+            <TableCell>Инвентарный номер</TableCell>
+            <TableCell>Название</TableCell>
+            <TableCell>Поставщик</TableCell>
             <TableCell align="right">МОЛ</TableCell>
             <TableCell align="right">Статус</TableCell>
           </TableRow>

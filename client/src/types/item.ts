@@ -12,12 +12,3 @@ export type ILogs = {
   action: string;
   date: number;
 };
-
-export type IItem = {
-  inventorynumber: string;
-  supplier: string;
-  name: string;
-  person?: number;
-  status?: number;
-  history?: ILogs[];
-};
