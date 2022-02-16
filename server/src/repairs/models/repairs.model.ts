@@ -1,4 +1,11 @@
-import { Column, DataType, Model, Table } from 'sequelize-typescript';
+import {
+  Column,
+  DataType,
+  ForeignKey,
+  Model,
+  Table,
+} from 'sequelize-typescript';
+import { RepairsType } from './types.model';
 
 interface RepairCreationAttrs {
   inventorynumber: number;
@@ -24,10 +31,11 @@ export class Repair extends Model<Repair, RepairCreationAttrs> {
   })
   inventorynumber: number;
 
+  @ForeignKey(() => RepairsType)
   @Column({
     type: DataType.INTEGER,
   })
-  type: number;
+  typeId: number;
 
   @Column({
     type: DataType.INTEGER,

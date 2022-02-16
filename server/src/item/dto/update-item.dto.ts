@@ -3,8 +3,9 @@ export type UpdateItemDto = {
   dateofdelivery?: Date;
   guaranteeperiod?: Date;
   supplier?: string;
-  person?: number;
-  status?: number;
-  type?: number;
+  placeId?: number;
+  personId?: number;
+  statusId?: number;
+  typeId?: number;
   description?: string;
 };

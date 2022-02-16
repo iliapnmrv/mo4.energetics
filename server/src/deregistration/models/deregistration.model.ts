@@ -1,16 +1,18 @@
 import { Column, DataType, Model, Table } from 'sequelize-typescript';
 
-interface ItemCreationAttrs {
+interface DeregistrationCreationAttrs {
   inventorynumber: number;
-  requestnumber: number;
-  type: number;
-  startdate: Date;
+  reason: string;
+  agreement: string;
 }
 
 @Table({
   tableName: 'deregistration',
 })
-export class Repair extends Model<Repair, ItemCreationAttrs> {
+export class Deregistration extends Model<
+  Deregistration,
+  DeregistrationCreationAttrs
+> {
   @Column({
     type: DataType.INTEGER,
     unique: true,
@@ -28,6 +30,11 @@ export class Repair extends Model<Repair, ItemCreationAttrs> {
     type: DataType.STRING,
   })
   reason: string;
+
+  @Column({
+    type: DataType.STRING,
+  })
+  agreement: string;
 
   @Column({
     type: DataType.STRING,

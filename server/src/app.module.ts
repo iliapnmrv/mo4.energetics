@@ -7,6 +7,12 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { ConfigModule } from '@nestjs/config';
 import { Item } from './item/models/item.model';
 import { DeregistrationModule } from './deregistration/deregistration.module';
+import { Repair } from './repairs/models/repairs.model';
+import { Deregistration } from './deregistration/models/deregistration.model';
+import { Place } from './item/models/places.model';
+import { Person } from './item/models/persons.model';
+import { Status } from './item/models/statuses.model';
+import { Type } from './item/models/types.model';
 
 @Module({
   imports: [
@@ -22,8 +28,9 @@ import { DeregistrationModule } from './deregistration/deregistration.module';
       username: process.env.MYSQL_USERNAME,
       password: process.env.MYSQL_PASSWORD,
       database: process.env.MYSQL_DB,
-      models: [Item],
+      models: [Item, Repair, Type, Deregistration, Place, Person, Status],
       autoLoadModels: true,
+      synchronize: true,
     }),
     DeregistrationModule,
   ],
