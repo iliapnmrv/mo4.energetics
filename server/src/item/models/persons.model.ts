@@ -24,8 +24,10 @@ export class Person extends Model<Person> {
   })
   id: number;
 
+  @HasOne(() => Item, { foreignKey: 'person_id', as: 'Person' })
   @Column({
     type: DataType.INTEGER,
+    primaryKey: true,
   })
   personId: number;
 

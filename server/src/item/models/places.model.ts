@@ -4,6 +4,7 @@ import {
   DataType,
   ForeignKey,
   HasMany,
+  HasOne,
   Model,
   Table,
 } from 'sequelize-typescript';
@@ -23,6 +24,7 @@ export class Place extends Model<Place> {
   })
   id: number;
 
+  @HasOne(() => Item, { foreignKey: 'place_id', as: 'Place' })
   @Column({
     type: DataType.INTEGER,
   })

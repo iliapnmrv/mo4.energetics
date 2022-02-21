@@ -13,6 +13,7 @@ import { Place } from './item/models/places.model';
 import { Person } from './item/models/persons.model';
 import { Status } from './item/models/statuses.model';
 import { Type } from './item/models/types.model';
+import { RepairsType } from './repairs/models/types.model';
 
 @Module({
   imports: [
@@ -28,13 +29,22 @@ import { Type } from './item/models/types.model';
       username: process.env.MYSQL_USERNAME,
       password: process.env.MYSQL_PASSWORD,
       database: process.env.MYSQL_DB,
-      models: [Item, Repair, Type, Deregistration, Place, Person, Status],
+      models: [
+        Item,
+        Repair,
+        Type,
+        Deregistration,
+        Place,
+        Person,
+        Status,
+        RepairsType,
+      ],
       autoLoadModels: true,
       synchronize: true,
     }),
     DeregistrationModule,
   ],
-  controllers: [RepairsController],
-  providers: [RepairsService],
+  // controllers: [RepairsController],
+  // providers: [RepairsService],
 })
 export class AppModule {}

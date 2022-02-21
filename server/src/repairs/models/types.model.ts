@@ -1,5 +1,11 @@
-import { Column, DataType, HasMany, Model, Table } from 'sequelize-typescript';
-import { Item } from 'src/item/models/item.model';
+import {
+  Column,
+  DataType,
+  HasMany,
+  HasOne,
+  Model,
+  Table,
+} from 'sequelize-typescript';
 import { Repair } from './repairs.model';
 
 @Table({
@@ -16,6 +22,7 @@ export class RepairsType extends Model<RepairsType> {
   })
   id: number;
 
+  @HasOne(() => Repair, { foreignKey: 'type_id', as: 'RepairsType' })
   @Column({
     type: DataType.INTEGER,
   })
@@ -25,7 +32,4 @@ export class RepairsType extends Model<RepairsType> {
     type: DataType.STRING,
   })
   typeName: string;
-
-  @HasMany(() => Repair)
-  item: Repair[];
 }

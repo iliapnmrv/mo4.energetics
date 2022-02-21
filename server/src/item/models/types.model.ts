@@ -3,6 +3,7 @@ import {
   Column,
   DataType,
   HasMany,
+  HasOne,
   Model,
   Table,
 } from 'sequelize-typescript';
@@ -22,6 +23,7 @@ export class Type extends Model<Type> {
   })
   id: number;
 
+  @HasOne(() => Item, { foreignKey: 'type_id', as: 'Type' })
   @Column({
     type: DataType.INTEGER,
   })
