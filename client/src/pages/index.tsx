@@ -10,19 +10,26 @@ import Paper from "@mui/material/Paper";
 import { NextPage } from "next";
 import Row from "../components/Table/Row";
 import $api from "../http";
-import { ILogs } from "../types/item";
+import { ILogs, IRepairs } from "../types/item";
 
 export type IItem = {
   inventorynumber: string;
   supplier: string;
   name: string;
-  person?: number;
+  dateofdelivery: Date;
+  guaranteeperiod: Date;
+  person_id?: number;
+  status_id?: number;
+  type_id?: number;
+  place_id?: number;
+  description?: string;
   status?: number;
+  repairs?: IRepairs[];
   history?: ILogs[];
 };
 
 export async function getStaticProps() {
-  const { data: rows } = await $api.get<IItem[]>(`item`);
+  const { data: rows } = await $api.get<IItem[]>(`items`);
   return {
     props: { rows }, // will be passed to the page component as props
   };

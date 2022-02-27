@@ -1,11 +1,15 @@
-// export type IRepairs = {
-//   applicationNumber: number;
-//   repairType: string;
-//   startDate: number;
-//   decision: string;
-//   endDate: number;
-
-// };
+export type IRepairs = {
+  id: number;
+  requestnumber: number;
+  inventorynumber: string;
+  type_id: number;
+  decision: string;
+  startdate: Date;
+  enddate: Date;
+  handoverdate: Date;
+  comments: string;
+  price: number;
+};
 
 export type ILogs = {
   user: string;
