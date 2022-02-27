@@ -6,8 +6,11 @@ import { Repair } from './models/repairs.model';
 @Injectable()
 export class RepairsService {
   constructor(@InjectModel(Repair) private repairRepository: typeof Repair) {}
-  async createRepair(dto: CreateRepairDto) {
-    const repair = await this.repairRepository.create({ ...dto });
+  async createRepair(id: number, dto: CreateRepairDto) {
+    const repair = await this.repairRepository.create({
+      ...dto,
+      inventorynumber: id,
+    });
     return repair;
   }
 }

@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Param, Post } from '@nestjs/common';
 import { CreateRepairDto } from './dto/create-repair.dto';
 import { RepairsService } from './repairs.service';
 
@@ -6,8 +6,8 @@ import { RepairsService } from './repairs.service';
 export class RepairsController {
   constructor(private repairsService: RepairsService) {}
 
-  @Post()
-  createRepair(@Body() dto: CreateRepairDto) {
-    return this.repairsService.createRepair(dto);
+  @Post('/:id')
+  createRepair(@Param('id') id: number, @Body() dto: CreateRepairDto) {
+    return this.repairsService.createRepair(id, dto);
   }
 }

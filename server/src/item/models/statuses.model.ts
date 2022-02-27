@@ -11,6 +11,8 @@ import { Item } from 'src/item/models/item.model';
 
 @Table({
   tableName: 'statuses',
+  createdAt: false,
+  updatedAt: false,
 })
 export class Status extends Model<Status> {
   @Column({
@@ -31,16 +33,4 @@ export class Status extends Model<Status> {
     type: DataType.STRING,
   })
   statusName: string;
-
-  @Column({
-    defaultValue: DataType.NOW,
-    type: DataType.DATE,
-  })
-  createdAt: Date;
-
-  @Column({
-    defaultValue: DataType.NOW,
-    type: DataType.DATE,
-  })
-  updatedAt: Date;
 }

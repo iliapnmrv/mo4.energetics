@@ -14,6 +14,7 @@ import { Person } from './item/models/persons.model';
 import { Status } from './item/models/statuses.model';
 import { Type } from './item/models/types.model';
 import { RepairsType } from './repairs/models/types.model';
+import { CatalogsModule } from './catalogs/catalogs.module';
 
 @Module({
   imports: [
@@ -43,6 +44,7 @@ import { RepairsType } from './repairs/models/types.model';
       synchronize: true,
     }),
     DeregistrationModule,
+    CatalogsModule,
   ],
   // controllers: [RepairsController],
   // providers: [RepairsService],
