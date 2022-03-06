@@ -1,21 +1,19 @@
 import {
-  BelongsTo,
   Column,
   DataType,
-  ForeignKey,
   HasMany,
   HasOne,
   Model,
   Table,
 } from 'sequelize-typescript';
-import { Item } from 'src/item/models/item.model';
+import { Repair } from './repairs.model';
 
 @Table({
-  tableName: 'places',
+  tableName: 'repairs_decisions',
   createdAt: false,
   updatedAt: false,
 })
-export class Place extends Model<Place> {
+export class RepairsDecision extends Model<RepairsDecision> {
   @Column({
     type: DataType.INTEGER,
     unique: true,
@@ -24,14 +22,14 @@ export class Place extends Model<Place> {
   })
   id: number;
 
-  @HasOne(() => Item, { foreignKey: 'place_id', as: 'Place' })
+  @HasOne(() => Repair, { foreignKey: 'decision_id', as: 'RepairsDecision' })
   @Column({
     type: DataType.INTEGER,
   })
-  placeId: number;
+  decisionId: number;
 
   @Column({
     type: DataType.STRING,
   })
-  placeName: string;
+  decisionName: string;
 }

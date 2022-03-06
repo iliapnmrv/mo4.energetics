@@ -18,7 +18,7 @@ export class ItemController {
   }
 
   @Post(':id')
-  updateItem(@Param('id') id, @Body() itemDto: UpdateItemDto) {
+  updateItem(@Param('id') id: number, @Body() itemDto: UpdateItemDto) {
     return this.service.updateItem(id, itemDto);
   }
 

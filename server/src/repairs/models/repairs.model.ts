@@ -7,6 +7,7 @@ import {
   Table,
 } from 'sequelize-typescript';
 import { Item } from 'src/item/models/item.model';
+import { RepairsDecision } from './decision.model';
 import { RepairsType } from './types.model';
 
 interface RepairCreationAttrs {
@@ -45,10 +46,14 @@ export class Repair extends Model<Repair, RepairCreationAttrs> {
   })
   type_id: number;
 
+  @BelongsTo(() => RepairsDecision, {
+    foreignKey: 'decision_id',
+    as: 'Decision',
+  })
   @Column({
     type: DataType.INTEGER,
   })
-  decision: number;
+  decision_id: number;
 
   @Column({
     type: DataType.DATEONLY,

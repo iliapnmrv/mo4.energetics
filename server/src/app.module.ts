@@ -15,6 +15,7 @@ import { Status } from './item/models/statuses.model';
 import { Type } from './item/models/types.model';
 import { RepairsType } from './repairs/models/types.model';
 import { CatalogsModule } from './catalogs/catalogs.module';
+import { RepairsDecision } from './repairs/models/decision.model';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { CatalogsModule } from './catalogs/catalogs.module';
         Person,
         Status,
         RepairsType,
+        RepairsDecision,
       ],
       autoLoadModels: true,
       synchronize: true,

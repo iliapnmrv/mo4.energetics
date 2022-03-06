@@ -59,8 +59,9 @@ export default function Qr({ data }: Props) {
     const response = await $api.post(`items/${inventorynumber}`);
   };
 
-  const { persons } = useAppSelector((state) => state.catalogsReducer);
-  const dispatch = useAppDispatch();
+  const { persons, places, statuses, types, repairTypes } = useAppSelector(
+    (state) => state.catalogsReducer
+  );
 
   return (
     <ItemLayout>
@@ -145,6 +146,7 @@ export default function Qr({ data }: Props) {
                     <Field
                       width={100}
                       as="select"
+                      defaultValue=""
                       name="person_id"
                       label="МОЛ"
                       component={Select}
@@ -153,6 +155,46 @@ export default function Qr({ data }: Props) {
                         return (
                           <MenuItem value={person.personId} key={person.id}>
                             {person.personName}
+                          </MenuItem>
+                        );
+                      })}
+                    </Field>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={4}>
+                  <FormControl fullWidth>
+                    <Field
+                      width={100}
+                      as="select"
+                      defaultValue=""
+                      name="status_id"
+                      label="Статус"
+                      component={Select}
+                    >
+                      {statuses.map((status) => {
+                        return (
+                          <MenuItem value={status.statusId} key={status.id}>
+                            {status.statusName}
+                          </MenuItem>
+                        );
+                      })}
+                    </Field>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={4}>
+                  <FormControl fullWidth>
+                    <Field
+                      width={100}
+                      as="select"
+                      name="type_id"
+                      defaultValue=""
+                      label="Номенкулатура устройства"
+                      component={Select}
+                    >
+                      {types.map((type) => {
+                        return (
+                          <MenuItem value={type.typeId} key={type.id}>
+                            {type.typeName}
                           </MenuItem>
                         );
                       })}
