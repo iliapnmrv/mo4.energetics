@@ -1,15 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import $api from "http/index";
 import { IItem } from "pages";
 import { Field, Form, Formik, FormikProps } from "formik";
 import { TextField, Select } from "formik-mui";
+import { KeyboardDatePicker } from "@material-ui/pickers";
 import {
-  Box,
   Button,
+  Box,
   FormControl,
   Grid,
   MenuItem,
   Paper,
+  Stack,
   Table,
   TableBody,
   TableCell,
@@ -17,20 +19,18 @@ import {
   TableHead,
   TableRow,
   Typography,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
 } from "@mui/material";
 import ItemLayout from "layouts/ItemLayout";
 import { useAppDispatch, useAppSelector } from "hooks/redux";
+import { useRouter } from "next/router";
+import Link from "next/link";
 
-export async function getStaticPaths() {
-  const { data } = await $api.get<IItem[]>(`items`);
-  const paths = data.map((item) => ({
-    params: { id: item.inventorynumber.toString() },
-  }));
-
-  return { paths, fallback: false };
-}
-
-export async function getStaticProps({ params }: any) {
+export async function getServerSideProps({ params }: any) {
   const { data } = await $api.get(`items/${params.id}`);
   return {
     props: { data }, // will be passed to the page component as props
@@ -53,10 +53,23 @@ export default function Qr({ data }: Props) {
     place_id,
     description,
     repairs,
+    dateofdelivery,
+    guaranteeperiod,
   } = data;
 
+  const router = useRouter();
+
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState<boolean>(false);
+
   const saveData = async (values: IItem) => {
-    const response = await $api.post(`items/${inventorynumber}`);
+    const response = await $api.post(`items/${inventorynumber}`, values);
+    router.push("/");
+  };
+
+  const deleteItem = async () => {
+    const response = await $api.delete(`items/${inventorynumber}`);
+    setIsDeleteDialogOpen(false);
+    router.push("/");
   };
 
   const { persons, places, statuses, types, repairTypes } = useAppSelector(
@@ -65,6 +78,28 @@ export default function Qr({ data }: Props) {
 
   return (
     <ItemLayout>
+      <Dialog
+        open={isDeleteDialogOpen}
+        onClose={() => setIsDeleteDialogOpen(false)}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          Удалить позицию {inventorynumber}?
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Вы уверены, что хотите удалить позицию с инвентарным номером{" "}
+            {inventorynumber}?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setIsDeleteDialogOpen(false)}>Отменить</Button>
+          <Button onClick={() => deleteItem()} autoFocus>
+            Удалить
+          </Button>
+        </DialogActions>
+      </Dialog>
       <Formik
         initialValues={{
           inventorynumber,
@@ -76,13 +111,14 @@ export default function Qr({ data }: Props) {
           type_id,
           place_id,
           description,
+          dateofdelivery,
+          guaranteeperiod,
         }}
         onSubmit={(values, actions) => {
-          console.log(values);
-          // saveData(values);
+          saveData(values);
         }}
       >
-        {({ values }) => (
+        {({ values, setFieldValue }) => (
           <Box sx={{ flexGrow: 1, padding: "30px", paddingTop: 0 }}>
             <Typography variant="h5" mb={"20px"}>
               {values.name} | {values.inventorynumber}
@@ -141,6 +177,27 @@ export default function Qr({ data }: Props) {
                     value={values.description}
                   />
                 </Grid>
+
+                <Grid item xs={8}>
+                  <FormControl fullWidth>
+                    <Field
+                      width={100}
+                      as="select"
+                      name="type_id"
+                      defaultValue=""
+                      label="Номенкулатура устройства"
+                      component={Select}
+                    >
+                      {types.map((type) => {
+                        return (
+                          <MenuItem value={type.typeId} key={type.id}>
+                            {type.typeName}
+                          </MenuItem>
+                        );
+                      })}
+                    </Field>
+                  </FormControl>
+                </Grid>
                 <Grid item xs={4}>
                   <FormControl fullWidth>
                     <Field
@@ -162,6 +219,30 @@ export default function Qr({ data }: Props) {
                   </FormControl>
                 </Grid>
                 <Grid item xs={4}>
+                  <KeyboardDatePicker
+                    label="Дата поставки"
+                    inputVariant="outlined"
+                    format="DD/MM/yyyy"
+                    clearable
+                    fullWidth
+                    value={values.dateofdelivery}
+                    onChange={(value) => setFieldValue("dateofdelivery", value)}
+                  />
+                </Grid>
+                <Grid item xs={4}>
+                  <KeyboardDatePicker
+                    label="Гарантийный срок"
+                    inputVariant="outlined"
+                    format="DD/MM/yyyy"
+                    clearable
+                    fullWidth
+                    value={values.guaranteeperiod}
+                    onChange={(value) =>
+                      setFieldValue("guaranteeperiod", value)
+                    }
+                  />
+                </Grid>
+                <Grid item xs={4}>
                   <FormControl fullWidth>
                     <Field
                       width={100}
@@ -181,33 +262,43 @@ export default function Qr({ data }: Props) {
                     </Field>
                   </FormControl>
                 </Grid>
-                <Grid item xs={4}>
-                  <FormControl fullWidth>
-                    <Field
-                      width={100}
-                      as="select"
-                      name="type_id"
-                      defaultValue=""
-                      label="Номенкулатура устройства"
-                      component={Select}
+                <Grid item xs={12}>
+                  <Stack
+                    direction="row"
+                    spacing={2}
+                    justifyContent="space-between"
+                    alignItems="center"
+                    width={"100%"}
+                  >
+                    <Button size="large" type="submit">
+                      Сохранить
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      color="error"
+                      onClick={() => setIsDeleteDialogOpen(true)}
                     >
-                      {types.map((type) => {
-                        return (
-                          <MenuItem value={type.typeId} key={type.id}>
-                            {type.typeName}
-                          </MenuItem>
-                        );
-                      })}
-                    </Field>
-                  </FormControl>
+                      Удалить
+                    </Button>
+                  </Stack>
                 </Grid>
-
-                <Button size="large" type="submit">
-                  Сохранить
-                </Button>
               </Grid>
             </Form>
-            <Typography variant="h5">Ремонты</Typography>
+            <Typography
+              variant="h5"
+              sx={{
+                padding: "10px 0px",
+                display: "flex",
+                justifyContent: "space-between",
+              }}
+            >
+              Ремонты
+              <Link href={`/repairs/${inventorynumber}/create`} passHref>
+                <Button variant="outlined" color="error">
+                  Добавить ремонт
+                </Button>
+              </Link>
+            </Typography>
             <TableContainer component={Paper}>
               <Table sx={{ minWidth: 650 }} aria-label="simple table">
                 <TableHead>

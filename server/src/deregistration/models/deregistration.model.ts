@@ -2,8 +2,10 @@ import { Column, DataType, Model, Table } from 'sequelize-typescript';
 
 interface DeregistrationCreationAttrs {
   inventorynumber: number;
+  deregistrationdate: Date;
   reason: string;
   agreement: string;
+  attachments: string[];
 }
 
 @Table({
@@ -27,6 +29,11 @@ export class Deregistration extends Model<
   inventorynumber: number;
 
   @Column({
+    type: DataType.DATE,
+  })
+  deregistrationdate: Date;
+
+  @Column({
     type: DataType.STRING,
   })
   reason: string;
@@ -37,9 +44,15 @@ export class Deregistration extends Model<
   agreement: string;
 
   @Column({
+    get() {
+      return this.getDataValue('attachments').split(';');
+    },
+    set(val: Array<string>) {
+      this.setDataValue('attachments', val.join(';'));
+    },
     type: DataType.STRING,
   })
-  attachment: string;
+  attachments: string[];
 
   @Column({
     defaultValue: DataType.NOW,

@@ -16,9 +16,15 @@ import { Type } from './item/models/types.model';
 import { RepairsType } from './repairs/models/types.model';
 import { CatalogsModule } from './catalogs/catalogs.module';
 import { RepairsDecision } from './repairs/models/decision.model';
+import { FileModule } from './file/file.module';
+import * as path from 'path';
+import { ServeStaticModule } from '@nestjs/serve-static';
 
 @Module({
   imports: [
+    ServeStaticModule.forRoot({
+      rootPath: path.resolve(__dirname, '..', 'static'),
+    }),
     ItemModule,
     RepairsModule,
     ConfigModule.forRoot({
@@ -47,8 +53,7 @@ import { RepairsDecision } from './repairs/models/decision.model';
     }),
     DeregistrationModule,
     CatalogsModule,
+    FileModule,
   ],
-  // controllers: [RepairsController],
-  // providers: [RepairsService],
 })
 export class AppModule {}

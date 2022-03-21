@@ -1,14 +1,14 @@
 import * as React from "react";
+import Paper from "@mui/material/Paper";
+import { Box } from "@mui/system";
+import { Fab } from "@mui/material";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
 import AddIcon from "@mui/icons-material/Add";
-
-import { NextPage } from "next";
 import Row from "../components/Table/Row";
 import $api from "../http";
 import { ILogs, IRepairs } from "../types/item";
@@ -21,8 +21,6 @@ import {
   setStatuses,
   setTypes,
 } from "store/slices/catalogsSlice";
-import { Fab } from "@mui/material";
-import { Box } from "@mui/system";
 import Link from "next/link";
 
 export type IItem = {

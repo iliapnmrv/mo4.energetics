@@ -20,6 +20,7 @@ import {
 } from "@mui/material";
 import ItemLayout from "layouts/ItemLayout";
 import { useAppDispatch, useAppSelector } from "hooks/redux";
+import { useRouter } from "next/router";
 
 type Props = {
   inventorynumber: number;
@@ -35,8 +36,10 @@ export async function getServerSideProps({ query }: any) {
 }
 
 export default function Qr({ inventorynumber }: Props) {
+  const router = useRouter();
   const saveData = async (values: IItem) => {
     const response = await $api.post(`items`, values);
+    router.push("/");
   };
 
   const { persons, places, statuses, types, repairTypes } = useAppSelector(
@@ -55,6 +58,8 @@ export default function Qr({ inventorynumber }: Props) {
           type_id: 0,
           place_id: 0,
           description: "",
+          dateofdelivery: "",
+          guaranteeperiod: "",
         }}
         onSubmit={(values, actions) => {
           console.log(values);

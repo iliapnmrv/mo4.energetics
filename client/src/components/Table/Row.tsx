@@ -13,6 +13,7 @@ import Typography from "@mui/material/Typography";
 import Link from "next/link";
 import { IItem } from "pages";
 import { ILogs } from "types/item";
+import { useAppSelector } from "hooks/redux";
 
 type Props = {
   row: IItem;
@@ -20,6 +21,10 @@ type Props = {
 
 export default function Row({ row }: Props) {
   const [open, setOpen] = useState(false);
+
+  const { persons, places, statuses, types, repairTypes } = useAppSelector(
+    (state) => state.catalogsReducer
+  );
 
   return (
     <>
@@ -42,8 +47,18 @@ export default function Row({ row }: Props) {
           {row.name}
         </TableCell>
         <TableCell align="right">{row.supplier}</TableCell>
-        <TableCell align="right">{row.person}</TableCell>
-        <TableCell align="right">{row.status}</TableCell>
+        <TableCell align="right">
+          {
+            persons.filter((person) => person.personId === row.person_id)[0]
+              .personName
+          }
+        </TableCell>
+        <TableCell align="right">
+          {
+            statuses.filter((status) => status.statusId === row.status_id)[0]
+              .statusName
+          }
+        </TableCell>
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
