@@ -1,4 +1,3 @@
-import { KeyboardDatePicker } from "@material-ui/pickers";
 import {
   Box,
   Button,
@@ -6,6 +5,7 @@ import {
   Grid,
   MenuItem,
   Typography,
+  TextField as TextFieldInput,
 } from "@mui/material";
 import { Field, Form, Formik } from "formik";
 import { Select, TextField } from "formik-mui";
@@ -14,6 +14,7 @@ import $api from "http/index";
 import ItemLayout from "layouts/ItemLayout";
 import { useRouter } from "next/router";
 import React from "react";
+import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
 
 type Props = {};
 
@@ -92,14 +93,15 @@ const Create = (props: Props) => {
                   </FormControl>
                 </Grid>
                 <Grid item xs={4}>
-                  <KeyboardDatePicker
+                  <DesktopDatePicker
                     label="Дата начала ремонта"
-                    inputVariant="outlined"
-                    format="DD/MM/yyyy"
-                    clearable
-                    fullWidth
+                    // clearable
+                    inputFormat="DD/MM/yyyy"
                     value={values.startdate}
                     onChange={(value) => setFieldValue("startdate", value)}
+                    renderInput={(params) => (
+                      <TextFieldInput {...params} fullWidth />
+                    )}
                   />
                 </Grid>
 

@@ -3,7 +3,6 @@ import $api from "http/index";
 import { IItem } from "pages";
 import { Field, Form, Formik, FormikProps } from "formik";
 import { TextField, Select } from "formik-mui";
-import { KeyboardDatePicker } from "@material-ui/pickers";
 import {
   Button,
   Box,
@@ -24,11 +23,13 @@ import {
   DialogContent,
   DialogContentText,
   DialogActions,
+  TextField as TextFieldInput,
 } from "@mui/material";
 import ItemLayout from "layouts/ItemLayout";
 import { useAppDispatch, useAppSelector } from "hooks/redux";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
 
 export async function getServerSideProps({ params }: any) {
   const { data } = await $api.get(`items/${params.id}`);
@@ -56,9 +57,6 @@ export default function Qr({ data }: Props) {
     dateofdelivery,
     guaranteeperiod,
   } = data;
-
-  console.log(data);
-  console.log(data.Repairs);
 
   const router = useRouter();
 
@@ -221,27 +219,29 @@ export default function Qr({ data }: Props) {
                   </FormControl>
                 </Grid>
                 <Grid item xs={4}>
-                  <KeyboardDatePicker
+                  <DesktopDatePicker
                     label="Дата поставки"
-                    inputVariant="outlined"
-                    format="DD/MM/yyyy"
-                    clearable
-                    fullWidth
+                    // clearable
+                    inputFormat="DD/MM/yyyy"
                     value={values.dateofdelivery}
                     onChange={(value) => setFieldValue("dateofdelivery", value)}
+                    renderInput={(params) => (
+                      <TextFieldInput {...params} fullWidth />
+                    )}
                   />
                 </Grid>
                 <Grid item xs={4}>
-                  <KeyboardDatePicker
+                  <DesktopDatePicker
                     label="Гарантийный срок"
-                    inputVariant="outlined"
-                    format="DD/MM/yyyy"
-                    clearable
-                    fullWidth
+                    // clearable
+                    inputFormat="DD/MM/yyyy"
                     value={values.guaranteeperiod}
                     onChange={(value) =>
                       setFieldValue("guaranteeperiod", value)
                     }
+                    renderInput={(params) => (
+                      <TextFieldInput {...params} fullWidth />
+                    )}
                   />
                 </Grid>
                 <Grid item xs={4}>
@@ -296,9 +296,7 @@ export default function Qr({ data }: Props) {
             >
               Ремонты
               <Link href={`/repairs/${inventorynumber}/create`} passHref>
-                <Button variant="outlined" color="error">
-                  Добавить ремонт
-                </Button>
+                <Button variant="outlined">Добавить ремонт</Button>
               </Link>
             </Typography>
             <TableContainer component={Paper}>
@@ -338,6 +336,42 @@ export default function Qr({ data }: Props) {
                               decision.decisionId === repair.decision_id
                           )[0]?.decisionName
                         }
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+            <Typography
+              variant="h5"
+              sx={{
+                padding: "10px 0px",
+                display: "flex",
+                justifyContent: "space-between",
+              }}
+            >
+              Журнал действий
+            </Typography>
+            <TableContainer component={Paper}>
+              <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell align="left">№ п/п</TableCell>
+                    <TableCell align="right">действие</TableCell>
+                    <TableCell align="right">Дата</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {Repairs?.map((repair, index) => (
+                    <TableRow key={repair.id}>
+                      <TableCell align="left">{index + 1}</TableCell>
+                      <TableCell align="right" component="th" scope="row">
+                        {new Date(repair.startdate).toLocaleDateString()}
+                      </TableCell>
+                      <TableCell align="right">
+                        {repair.enddate
+                          ? new Date(repair.enddate).toLocaleDateString()
+                          : null}
                       </TableCell>
                     </TableRow>
                   ))}

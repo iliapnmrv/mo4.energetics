@@ -9,19 +9,12 @@ import {
   FormControl,
   Grid,
   MenuItem,
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Typography,
+  TextField as TextFieldInput,
 } from "@mui/material";
 import ItemLayout from "layouts/ItemLayout";
 import { useAppDispatch, useAppSelector } from "hooks/redux";
 import { useRouter } from "next/router";
-import { KeyboardDatePicker } from "@material-ui/pickers";
+import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
 
 type Props = {
   inventorynumber: number;
@@ -144,27 +137,29 @@ export default function Qr({ inventorynumber }: Props) {
                   </FormControl>
                 </Grid>
                 <Grid item xs={4}>
-                  <KeyboardDatePicker
+                  <DesktopDatePicker
                     label="Дата поставки"
-                    inputVariant="outlined"
-                    format="DD/MM/yyyy"
-                    clearable
-                    fullWidth
+                    // clearable
+                    inputFormat="DD/MM/yyyy"
                     value={values.dateofdelivery}
                     onChange={(value) => setFieldValue("dateofdelivery", value)}
+                    renderInput={(params) => (
+                      <TextFieldInput {...params} fullWidth />
+                    )}
                   />
                 </Grid>
                 <Grid item xs={4}>
-                  <KeyboardDatePicker
+                  <DesktopDatePicker
                     label="Гарантийный срок"
-                    inputVariant="outlined"
-                    format="DD/MM/yyyy"
-                    clearable
-                    fullWidth
+                    // clearable
+                    inputFormat="DD/MM/yyyy"
                     value={values.guaranteeperiod}
                     onChange={(value) =>
                       setFieldValue("guaranteeperiod", value)
                     }
+                    renderInput={(params) => (
+                      <TextFieldInput {...params} fullWidth />
+                    )}
                   />
                 </Grid>
                 <Grid item xs={4}>

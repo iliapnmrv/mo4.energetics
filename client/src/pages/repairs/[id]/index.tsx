@@ -1,4 +1,3 @@
-import { KeyboardDatePicker } from "@material-ui/pickers";
 import {
   Box,
   Button,
@@ -11,6 +10,8 @@ import {
   Grid,
   MenuItem,
   Typography,
+  TextField as TextFieldInput,
+  Stack,
 } from "@mui/material";
 import { Field, Form, Formik } from "formik";
 import { Select, TextField } from "formik-mui";
@@ -20,6 +21,7 @@ import ItemLayout from "layouts/ItemLayout";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { IRepairs } from "types/item";
+import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
 
 export async function getServerSideProps({ params }: any) {
   const { data: repair } = await $api.get(`repairs/${params.id}`);
@@ -178,36 +180,39 @@ const EditRepair = ({ repair }: Props) => {
                   </FormControl>
                 </Grid>
                 <Grid item xs={4}>
-                  <KeyboardDatePicker
+                  <DesktopDatePicker
                     label="Дата начала ремонта"
-                    inputVariant="outlined"
-                    format="DD/MM/yyyy"
-                    clearable
-                    fullWidth
+                    // clearable
+                    inputFormat="DD/MM/yyyy"
                     value={values.startdate}
                     onChange={(value) => setFieldValue("startdate", value)}
+                    renderInput={(params) => (
+                      <TextFieldInput {...params} fullWidth />
+                    )}
                   />
                 </Grid>
                 <Grid item xs={4}>
-                  <KeyboardDatePicker
+                  <DesktopDatePicker
                     label="Дата окончания ремонта"
-                    inputVariant="outlined"
-                    format="DD/MM/yyyy"
-                    clearable
-                    fullWidth
+                    // clearable
+                    inputFormat="DD/MM/yyyy"
                     value={values.enddate}
                     onChange={(value) => setFieldValue("enddate", value)}
+                    renderInput={(params) => (
+                      <TextFieldInput {...params} fullWidth />
+                    )}
                   />
                 </Grid>
                 <Grid item xs={4}>
-                  <KeyboardDatePicker
+                  <DesktopDatePicker
                     label="Дата передачи"
-                    inputVariant="outlined"
-                    format="DD/MM/yyyy"
-                    clearable
-                    fullWidth
+                    // clearable
+                    inputFormat="DD/MM/yyyy"
                     value={values.handoverdate}
                     onChange={(value) => setFieldValue("handoverdate", value)}
+                    renderInput={(params) => (
+                      <TextFieldInput {...params} fullWidth />
+                    )}
                   />
                 </Grid>
                 <Grid item xs={4}>
@@ -233,13 +238,26 @@ const EditRepair = ({ repair }: Props) => {
                     component={TextField}
                   />
                 </Grid>
-
-                <Button size="large" type="submit">
-                  Сохранить
-                </Button>
-                <Button size="large" type="submit" onClick={() => {}}>
-                  Удалить ремонт
-                </Button>
+                <Stack
+                  direction="row"
+                  spacing={2}
+                  justifyContent="space-between"
+                  alignItems="center"
+                  width={"100%"}
+                  marginTop={2}
+                >
+                  <Button size="large" type="submit">
+                    Сохранить
+                  </Button>
+                  <Button
+                    size="large"
+                    variant="outlined"
+                    color="error"
+                    onClick={() => setIsDeleteDialogOpen(true)}
+                  >
+                    Удалить ремонт
+                  </Button>
+                </Stack>
               </Grid>
             </Form>
           </Box>
