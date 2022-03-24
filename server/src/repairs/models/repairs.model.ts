@@ -35,6 +35,11 @@ export class Repair extends Model<Repair, RepairCreationAttrs> {
   requestnumber: number;
 
   @ForeignKey(() => Item)
+  @BelongsTo(() => Item, {
+    foreignKey: 'inventorynumber',
+    as: 'Item',
+    targetKey: 'inventorynumber',
+  })
   @Column({
     type: DataType.INTEGER,
   })

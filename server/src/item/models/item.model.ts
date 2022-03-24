@@ -4,6 +4,7 @@ import {
   DataType,
   ForeignKey,
   HasMany,
+  HasOne,
   Model,
   Table,
 } from 'sequelize-typescript';
@@ -43,8 +44,15 @@ export class Item extends Model<Item, ItemCreationAttrs> {
   })
   name: string;
 
+  @HasMany(() => Repair, {
+    foreignKey: 'inventorynumber',
+    as: 'Repairs',
+    sourceKey: 'inventorynumber',
+  })
   @Column({
     type: DataType.INTEGER,
+    primaryKey: true,
+    unique: true,
   })
   inventorynumber: number;
 

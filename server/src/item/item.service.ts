@@ -41,7 +41,7 @@ export class ItemService {
         { model: Status, as: 'Status' },
         { model: Type, as: 'Type' },
         { model: Place, as: 'Place' },
-        { model: Repair },
+        { model: Repair, as: 'Repairs' },
       ],
     });
   }

@@ -21,6 +21,7 @@ import {
 import ItemLayout from "layouts/ItemLayout";
 import { useAppDispatch, useAppSelector } from "hooks/redux";
 import { useRouter } from "next/router";
+import { KeyboardDatePicker } from "@material-ui/pickers";
 
 type Props = {
   inventorynumber: number;
@@ -58,15 +59,15 @@ export default function Qr({ inventorynumber }: Props) {
           type_id: 0,
           place_id: 0,
           description: "",
-          dateofdelivery: "",
-          guaranteeperiod: "",
+          dateofdelivery: null,
+          guaranteeperiod: null,
         }}
         onSubmit={(values, actions) => {
           console.log(values);
           saveData(values);
         }}
       >
-        {({ values }) => (
+        {({ values, setFieldValue }) => (
           <Box sx={{ flexGrow: 1, padding: "30px", paddingTop: "20px" }}>
             <Form>
               <Grid container spacing={2}>
@@ -79,7 +80,7 @@ export default function Qr({ inventorynumber }: Props) {
                     style={{
                       width: "100%",
                     }}
-                    disabled
+                    // disabled
                     component={TextField}
                   />
                 </Grid>
@@ -141,6 +142,30 @@ export default function Qr({ inventorynumber }: Props) {
                       })}
                     </Field>
                   </FormControl>
+                </Grid>
+                <Grid item xs={4}>
+                  <KeyboardDatePicker
+                    label="Дата поставки"
+                    inputVariant="outlined"
+                    format="DD/MM/yyyy"
+                    clearable
+                    fullWidth
+                    value={values.dateofdelivery}
+                    onChange={(value) => setFieldValue("dateofdelivery", value)}
+                  />
+                </Grid>
+                <Grid item xs={4}>
+                  <KeyboardDatePicker
+                    label="Гарантийный срок"
+                    inputVariant="outlined"
+                    format="DD/MM/yyyy"
+                    clearable
+                    fullWidth
+                    value={values.guaranteeperiod}
+                    onChange={(value) =>
+                      setFieldValue("guaranteeperiod", value)
+                    }
+                  />
                 </Grid>
                 <Grid item xs={4}>
                   <FormControl fullWidth>

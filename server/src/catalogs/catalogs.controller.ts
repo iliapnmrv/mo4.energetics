@@ -25,4 +25,8 @@ export class CatalogsController {
   getRepairsTypes() {
     return this.service.getRepairsTypes();
   }
+  @Get('/repairsDecisions')
+  getRepairsDecisions() {
+    return this.service.getRepairsDecisions();
+  }
 }

@@ -3,7 +3,7 @@ export type IRepairs = {
   requestnumber: number;
   inventorynumber: string;
   type_id: number;
-  decision: string;
+  decision_id: number;
   startdate: Date;
   enddate: Date;
   handoverdate: Date;

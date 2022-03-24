@@ -7,10 +7,18 @@ import { Place } from 'src/item/models/places.model';
 import { Status } from 'src/item/models/statuses.model';
 import { Person } from 'src/item/models/persons.model';
 import { RepairsType } from 'src/repairs/models/types.model';
+import { RepairsDecision } from 'src/repairs/models/decision.model';
 
 @Module({
   imports: [
-    SequelizeModule.forFeature([Type, Place, Status, Person, RepairsType]),
+    SequelizeModule.forFeature([
+      Type,
+      Place,
+      Status,
+      Person,
+      RepairsType,
+      RepairsDecision,
+    ]),
   ],
   providers: [CatalogsService],
   controllers: [CatalogsController],

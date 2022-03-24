@@ -9,6 +9,8 @@ export class RepairsService {
   constructor(@InjectModel(Repair) private repairRepository: typeof Repair) {}
 
   async createRepair(id: number, dto: CreateRepairDto) {
+    console.log(id, dto);
+
     const repair = await this.repairRepository.create({
       ...dto,
       inventorynumber: id,
@@ -23,6 +25,20 @@ export class RepairsService {
       },
       { where: { requestnumber: id } },
     );
+    return repair;
+  }
+
+  async getRepair(requestnumber: number) {
+    const repair = await this.repairRepository.findOne({
+      where: { requestnumber },
+    });
+    return repair;
+  }
+
+  async deleteRepair(requestnumber: number) {
+    const repair = await this.repairRepository.destroy({
+      where: { requestnumber },
+    });
     return repair;
   }
 }

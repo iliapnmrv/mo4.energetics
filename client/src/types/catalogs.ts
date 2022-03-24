@@ -23,3 +23,8 @@ export type IRepairType = {
   typeId: number;
   typeName: string;
 };
+export type IRepairDecision = {
+  id: number;
+  decisionId: number;
+  decisionName: string;
+};

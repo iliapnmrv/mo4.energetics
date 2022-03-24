@@ -52,10 +52,13 @@ export default function Qr({ data }: Props) {
     type_id,
     place_id,
     description,
-    repairs,
+    Repairs,
     dateofdelivery,
     guaranteeperiod,
   } = data;
+
+  console.log(data);
+  console.log(data.Repairs);
 
   const router = useRouter();
 
@@ -72,9 +75,8 @@ export default function Qr({ data }: Props) {
     router.push("/");
   };
 
-  const { persons, places, statuses, types, repairTypes } = useAppSelector(
-    (state) => state.catalogsReducer
-  );
+  const { persons, places, statuses, types, repairTypes, repairDecisions } =
+    useAppSelector((state) => state.catalogsReducer);
 
   return (
     <ItemLayout>
@@ -311,15 +313,32 @@ export default function Qr({ data }: Props) {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {repairs?.map((repair) => (
+                  {Repairs?.map((repair) => (
                     <TableRow key={repair.id}>
                       <TableCell component="th" scope="row">
-                        {repair.requestnumber}
+                        <Link href={`repairs/${repair.requestnumber}`}>
+                          <a>{repair.requestnumber}</a>
+                        </Link>
                       </TableCell>
-                      <TableCell align="right">{repair.startdate}</TableCell>
-                      <TableCell align="right">{repair.enddate}</TableCell>
+
+                      <TableCell align="right">
+                        {new Date(repair.startdate).toLocaleDateString()}
+                      </TableCell>
+                      <TableCell align="right">
+                        {repair.enddate
+                          ? new Date(repair.enddate).toLocaleDateString()
+                          : null}
+                      </TableCell>
                       <TableCell align="right">{repair.price}</TableCell>
-                      <TableCell align="right">{repair.decision}</TableCell>
+                      <TableCell align="right">
+                        {" "}
+                        {
+                          repairDecisions.filter(
+                            (decision) =>
+                              decision.decisionId === repair.decision_id
+                          )[0]?.decisionName
+                        }
+                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>

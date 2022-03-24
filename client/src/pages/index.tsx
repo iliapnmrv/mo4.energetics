@@ -12,11 +12,19 @@ import AddIcon from "@mui/icons-material/Add";
 import Row from "../components/Table/Row";
 import $api from "../http";
 import { ILogs, IRepairs } from "../types/item";
-import { IPerson, IPlace, IRepairType, IStatus, IType } from "types/catalogs";
+import {
+  IPerson,
+  IPlace,
+  IRepairDecision,
+  IRepairType,
+  IStatus,
+  IType,
+} from "types/catalogs";
 import { useAppDispatch, useAppSelector } from "hooks/redux";
 import {
   setPersons,
   setPlaces,
+  setRepairDecisions,
   setRepairTypes,
   setStatuses,
   setTypes,
@@ -35,11 +43,11 @@ export type IItem = {
   place_id?: number;
   description?: string;
   status?: number;
-  repairs?: IRepairs[];
+  Repairs?: IRepairs[];
   history?: ILogs[];
 };
 
-export async function getStaticProps() {
+export async function getServerSideProps() {
   const { data: rows } = await $api.get<IItem[]>(`items`);
   const { data: persons } = await $api.get<IPerson[]>(`catalogs/persons`);
   const { data: places } = await $api.get<IPlace[]>(`catalogs/places`);
@@ -48,8 +56,19 @@ export async function getStaticProps() {
   const { data: repairsTypes } = await $api.get<IRepairType[]>(
     `catalogs/repairsTypes`
   );
+  const { data: repairsDecisions } = await $api.get<IRepairType[]>(
+    `catalogs/repairsDecisions`
+  );
   return {
-    props: { rows, persons, places, statuses, types, repairsTypes }, // will be passed to the page component as props
+    props: {
+      rows,
+      persons,
+      places,
+      statuses,
+      types,
+      repairsTypes,
+      repairsDecisions,
+    }, // will be passed to the page component as props
   };
 }
 
@@ -60,6 +79,7 @@ type Props = {
   statuses: IStatus[];
   types: IType[];
   repairsTypes: IRepairType[];
+  repairsDecisions: IRepairDecision[];
 };
 
 const Home: React.FC<Props> = ({
@@ -69,6 +89,7 @@ const Home: React.FC<Props> = ({
   statuses,
   types,
   repairsTypes,
+  repairsDecisions,
 }: Props) => {
   const dispatch = useAppDispatch();
   dispatch(setPersons(persons));
@@ -76,6 +97,7 @@ const Home: React.FC<Props> = ({
   dispatch(setStatuses(statuses));
   dispatch(setTypes(types));
   dispatch(setRepairTypes(repairsTypes));
+  dispatch(setRepairDecisions(repairsDecisions));
 
   return (
     <>
@@ -103,7 +125,7 @@ const Home: React.FC<Props> = ({
           href={{
             pathname: "/create",
             query: {
-              inventorynumber: rows[rows.length - 1].inventorynumber + 1,
+              inventorynumber: rows[rows.length - 1]?.inventorynumber + 1,
             },
           }}
           passHref

@@ -7,9 +7,13 @@ import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 import MomentUtils from "@date-io/moment";
 import moment from "moment";
 import "moment/locale/ru";
+import { persistStore } from "redux-persist";
+import { PersistGate } from "redux-persist/integration/react";
 moment.locale("ru"); // it is required to select default locale manually
 
 function MyApp({ Component, pageProps }: AppProps) {
+  let persistor = persistStore(store);
+
   return (
     <MuiPickersUtilsProvider
       libInstance={moment}
@@ -17,9 +21,11 @@ function MyApp({ Component, pageProps }: AppProps) {
       locale={"ru"}
     >
       <Provider store={store}>
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
+        <PersistGate loading={null} persistor={persistor}>
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+        </PersistGate>
       </Provider>
     </MuiPickersUtilsProvider>
   );
