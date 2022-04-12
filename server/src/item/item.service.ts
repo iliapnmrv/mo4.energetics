@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import sequelize from 'sequelize';
 import { Item } from 'src/item/models/item.model';
+import { Log } from 'src/logs/models/logs.model';
 import { Repair } from 'src/repairs/models/repairs.model';
 import { RepairsType } from 'src/repairs/models/types.model';
 import { CreateItemDto } from './dto/create-item.dto';
@@ -16,7 +17,10 @@ import { Type } from './models/types.model';
 // https://stackoverflow.com/questions/53117988/sequelize-select-and-include-another-table-alias
 @Injectable()
 export class ItemService {
-  constructor(@InjectModel(Item) private itemsRepository: typeof Item) {}
+  constructor(
+    @InjectModel(Item) private itemsRepository: typeof Item,
+    @InjectModel(Log) private logsRepository: typeof Log,
+  ) {}
 
   async getAll(): Promise<any> {
     return await this.itemsRepository.findAll({
@@ -27,13 +31,13 @@ export class ItemService {
         { model: Status, as: 'Status' },
         { model: Type, as: 'Type' },
         { model: Place, as: 'Place' },
+        { model: Log, as: 'Log' },
       ],
+      order: [[{ model: Log, as: 'Log' }, 'createdAt', 'ASC']],
     });
   }
 
   async getOne(id: number): Promise<Item> {
-    console.log(id);
-
     return await this.itemsRepository.findOne({
       where: { inventorynumber: id },
       include: [
@@ -42,18 +46,22 @@ export class ItemService {
         { model: Type, as: 'Type' },
         { model: Place, as: 'Place' },
         { model: Repair, as: 'Repairs' },
+        { model: Log, as: 'Log' },
       ],
+      order: [[{ model: Log, as: 'Log' }, 'createdAt', 'ASC']],
     });
   }
 
   async createItem(dto: CreateItemDto): Promise<Item> {
     const item = await this.itemsRepository.create(dto);
+    await this.logsRepository.create({
+      inventorynumber: dto.inventorynumber,
+      action: 'Позиция создана',
+    });
     return item;
   }
 
   async updateItem(id: number, dto: UpdateItemDto): Promise<Item> {
-    console.log(id, dto);
-
     for (const key in dto) {
       console.log({ [key]: dto[key] });
 
@@ -65,8 +73,6 @@ export class ItemService {
     const updatedItem = await this.itemsRepository.findOne({
       where: { inventorynumber: id },
     });
-    console.log(updatedItem);
-
     return updatedItem;
   }
 

@@ -42,9 +42,8 @@ export type IItem = {
   type_id?: number;
   place_id?: number;
   description?: string;
-  status?: number;
   Repairs?: IRepairs[];
-  history?: ILogs[];
+  Log?: ILogs[];
 };
 
 export async function getServerSideProps() {

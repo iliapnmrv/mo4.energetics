@@ -14,6 +14,15 @@ import Link from "next/link";
 import { IItem } from "pages";
 import { ILogs } from "types/item";
 import { useAppSelector } from "hooks/redux";
+import moment from "moment";
+import {
+  Card,
+  CardContent,
+  Divider,
+  Paper,
+  Stack,
+  TableContainer,
+} from "@mui/material";
 
 type Props = {
   row: IItem;
@@ -65,26 +74,95 @@ export default function Row({ row }: Props) {
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box sx={{ margin: 1 }}>
               <Typography variant="h6" gutterBottom component="div">
+                Информация по позиции
+              </Typography>
+              <Stack
+                direction="row"
+                spacing={1}
+                justifyContent="space-between"
+                divider={<Divider orientation="vertical" flexItem />}
+                alignItems="flex-start"
+              >
+                <Card variant="outlined" sx={{ border: "0px" }}>
+                  <CardContent sx={{ padding: "2px" }}>
+                    <Typography color="text.secondary" sx={{ fontSize: 14 }}>
+                      Номенкулатура устройства
+                    </Typography>
+                    <Typography variant="body2">
+                      {
+                        types.filter((type) => type.typeId === row.type_id)[0]
+                          .typeName
+                      }
+                    </Typography>
+                  </CardContent>
+                </Card>
+                <Card variant="outlined" sx={{ border: "0px" }}>
+                  <CardContent sx={{ padding: "2px" }}>
+                    <Typography color="text.secondary" sx={{ fontSize: 14 }}>
+                      Дополнительная информация
+                    </Typography>
+                    <Typography variant="body2">{row.description}</Typography>
+                  </CardContent>
+                </Card>
+                <Card variant="outlined" sx={{ border: "0px" }}>
+                  <CardContent sx={{ padding: "2px" }}>
+                    <Typography color="text.secondary" sx={{ fontSize: 14 }}>
+                      Дата поставки
+                    </Typography>
+                    <Typography variant="body2">
+                      {row.dateofdelivery}
+                    </Typography>
+                  </CardContent>
+                </Card>
+                <Card variant="outlined" sx={{ border: "0px" }}>
+                  <CardContent sx={{ padding: "2px" }}>
+                    <Typography color="text.secondary" sx={{ fontSize: 14 }}>
+                      Гарантийный срок
+                    </Typography>
+                    <Typography variant="body2">
+                      {row.guaranteeperiod}
+                    </Typography>
+                  </CardContent>
+                </Card>
+                <Card variant="outlined" sx={{ border: "0px" }}>
+                  <CardContent sx={{ padding: "2px" }}>
+                    <Typography color="text.secondary" sx={{ fontSize: 14 }}>
+                      Местоположение
+                    </Typography>
+                    <Typography variant="body2">
+                      {
+                        places.filter(
+                          (place) => place.placeId === row.place_id
+                        )[0].placeName
+                      }
+                    </Typography>
+                  </CardContent>
+                </Card>
+              </Stack>
+            </Box>
+            <Box sx={{ margin: 1 }}>
+              <Typography variant="h6" gutterBottom component="div">
                 Журнал действий
               </Typography>
-
               <Table size="small" aria-label="purchases">
                 <TableHead>
                   <TableRow>
-                    <TableCell>Пользователь</TableCell>
+                    <TableCell>№</TableCell>
                     <TableCell>Действие</TableCell>
                     <TableCell align="right">Дата</TableCell>
                   </TableRow>
                 </TableHead>
-                {row?.history ? (
+                {row?.Log ? (
                   <TableBody>
-                    {row.history.map((historyRow: ILogs) => (
-                      <TableRow key={historyRow.date}>
+                    {row.Log.map((log: ILogs, index) => (
+                      <TableRow key={index}>
                         <TableCell component="th" scope="row">
-                          {historyRow.user}
+                          {index + 1}
                         </TableCell>
-                        <TableCell>{historyRow.action}</TableCell>
-                        <TableCell align="right">{historyRow.date}</TableCell>
+                        <TableCell>{log.action}</TableCell>
+                        <TableCell align="right">
+                          {moment(log.createdAt).format("DD.MM.YYYY, h:mm:ss")}
+                        </TableCell>
                       </TableRow>
                     ))}
                   </TableBody>

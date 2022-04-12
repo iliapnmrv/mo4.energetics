@@ -14,5 +14,5 @@ export type IRepairs = {
 export type ILogs = {
   user: string;
   action: string;
-  date: number;
+  createdAt: Date;
 };

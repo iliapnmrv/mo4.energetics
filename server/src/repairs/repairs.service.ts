@@ -1,19 +1,25 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
+import { Log } from 'src/logs/models/logs.model';
 import { CreateRepairDto } from './dto/create-repair.dto';
 import { UpdateRepairDto } from './dto/update-repair.dto';
 import { Repair } from './models/repairs.model';
 
 @Injectable()
 export class RepairsService {
-  constructor(@InjectModel(Repair) private repairRepository: typeof Repair) {}
+  constructor(
+    @InjectModel(Repair) private repairRepository: typeof Repair,
+    @InjectModel(Log) private logsRepository: typeof Log,
+  ) {}
 
   async createRepair(id: number, dto: CreateRepairDto) {
-    console.log(id, dto);
-
     const repair = await this.repairRepository.create({
       ...dto,
       inventorynumber: id,
+    });
+    await this.logsRepository.create({
+      inventorynumber: id,
+      action: `Создана заявка на ремонт №${dto.requestnumber}`,
     });
     return repair;
   }

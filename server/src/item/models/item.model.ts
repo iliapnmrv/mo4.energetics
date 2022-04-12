@@ -8,6 +8,7 @@ import {
   Model,
   Table,
 } from 'sequelize-typescript';
+import { Log } from 'src/logs/models/logs.model';
 import { Repair } from 'src/repairs/models/repairs.model';
 import { Person } from './persons.model';
 import { Place } from './places.model';
@@ -30,7 +31,7 @@ interface ItemCreationAttrs {
 @Table({
   tableName: 'items',
 })
-export class Item extends Model<Item, ItemCreationAttrs> {
+export class Item extends Model implements ItemCreationAttrs {
   @Column({
     type: DataType.INTEGER,
     unique: true,
@@ -47,6 +48,11 @@ export class Item extends Model<Item, ItemCreationAttrs> {
   @HasMany(() => Repair, {
     foreignKey: 'inventorynumber',
     as: 'Repairs',
+    sourceKey: 'inventorynumber',
+  })
+  @HasMany(() => Log, {
+    foreignKey: 'inventorynumber',
+    as: 'Log',
     sourceKey: 'inventorynumber',
   })
   @Column({

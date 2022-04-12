@@ -30,6 +30,9 @@ import { useAppDispatch, useAppSelector } from "hooks/redux";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
+import _ from "lodash";
+import { LOGS_CATALOG } from "constants/constants";
+import moment from "moment";
 
 export async function getServerSideProps({ params }: any) {
   const { data } = await $api.get(`items/${params.id}`);
@@ -45,7 +48,7 @@ type Props = {
 export default function Qr({ data }: Props) {
   const {
     inventorynumber,
-    history,
+    Log,
     supplier,
     name,
     person_id,
@@ -58,12 +61,72 @@ export default function Qr({ data }: Props) {
     guaranteeperiod,
   } = data;
 
+  console.log("data", data);
+  console.log("logs", Log);
+
+  const initialState: IItem = {
+    inventorynumber,
+    supplier,
+    name,
+    person_id,
+    status_id,
+    type_id,
+    place_id,
+    description,
+    dateofdelivery,
+    guaranteeperiod,
+  };
+
   const router = useRouter();
+
+  function changedKeys(o1: any, o2: any) {
+    var keys = _.union(_.keys(o1), _.keys(o2));
+    return _.filter(keys, function (key: any) {
+      return o1[key] !== o2[key];
+    });
+  }
 
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState<boolean>(false);
 
+  const { persons, places, statuses, types, repairTypes, repairDecisions } =
+    useAppSelector((state) => state.catalogsReducer);
+
+  const catalogsNames: any = {
+    person_id: persons,
+    status_id: statuses,
+    type_id: types,
+    place_id: places,
+  };
+
   const saveData = async (values: IItem) => {
+    let action: string = "";
+    const logValues = changedKeys(initialState, values).map(
+      (changed: string) => {
+        if (catalogsNames[changed]) {
+          return (action += `${LOGS_CATALOG[changed]}: ${
+            catalogsNames[changed][initialState[changed] - 1][
+              changed.slice(0, -3) + "Name"
+            ]
+          } -> ${
+            catalogsNames[changed][values[changed] - 1][
+              changed.slice(0, -3) + "Name"
+            ]
+          }; `);
+        }
+        action += `${LOGS_CATALOG[changed]}: ${
+          new Date(initialState[changed]) > 0
+            ? new Date(initialState[changed]).toLocaleDateString()
+            : initialState[changed]
+        } -> ${
+          new Date(initialState[changed]) > 0
+            ? new Date(values[changed]).toLocaleDateString()
+            : values[changed]
+        }; `;
+      }
+    );
+
     const response = await $api.post(`items/${inventorynumber}`, values);
+    const logs = await $api.post(`logs/${inventorynumber}`, { action });
     router.push("/");
   };
 
@@ -72,9 +135,6 @@ export default function Qr({ data }: Props) {
     setIsDeleteDialogOpen(false);
     router.push("/");
   };
-
-  const { persons, places, statuses, types, repairTypes, repairDecisions } =
-    useAppSelector((state) => state.catalogsReducer);
 
   return (
     <ItemLayout>
@@ -103,7 +163,6 @@ export default function Qr({ data }: Props) {
       <Formik
         initialValues={{
           inventorynumber,
-          history,
           supplier,
           name,
           person_id,
@@ -230,6 +289,27 @@ export default function Qr({ data }: Props) {
                     )}
                   />
                 </Grid>
+                <Grid item xs={8}>
+                  <FormControl fullWidth>
+                    <Field
+                      width={100}
+                      as="select"
+                      defaultValue=""
+                      name="place_id"
+                      label="Местоположение"
+                      component={Select}
+                    >
+                      {places.map((place) => {
+                        return (
+                          <MenuItem value={place.placeId} key={place.id}>
+                            {place.placeName}
+                          </MenuItem>
+                        );
+                      })}
+                    </Field>
+                  </FormControl>
+                </Grid>
+
                 <Grid item xs={4}>
                   <DesktopDatePicker
                     label="Гарантийный срок"
@@ -244,7 +324,7 @@ export default function Qr({ data }: Props) {
                     )}
                   />
                 </Grid>
-                <Grid item xs={4}>
+                <Grid item xs={8}>
                   <FormControl fullWidth>
                     <Field
                       width={100}
@@ -356,22 +436,20 @@ export default function Qr({ data }: Props) {
               <Table sx={{ minWidth: 650 }} aria-label="simple table">
                 <TableHead>
                   <TableRow>
-                    <TableCell align="left">№ п/п</TableCell>
-                    <TableCell align="right">действие</TableCell>
+                    <TableCell align="left">№</TableCell>
+                    <TableCell align="left">Действие</TableCell>
                     <TableCell align="right">Дата</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {Repairs?.map((repair, index) => (
-                    <TableRow key={repair.id}>
+                  {Log?.map((log, index) => (
+                    <TableRow key={index}>
                       <TableCell align="left">{index + 1}</TableCell>
-                      <TableCell align="right" component="th" scope="row">
-                        {new Date(repair.startdate).toLocaleDateString()}
+                      <TableCell align="left" component="th" scope="row">
+                        {log.action}
                       </TableCell>
                       <TableCell align="right">
-                        {repair.enddate
-                          ? new Date(repair.enddate).toLocaleDateString()
-                          : null}
+                        {moment(log.createdAt).format("DD.MM.YYYY, H:mm:ss")}
                       </TableCell>
                     </TableRow>
                   ))}

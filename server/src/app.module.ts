@@ -19,6 +19,8 @@ import { RepairsDecision } from './repairs/models/decision.model';
 import { FileModule } from './file/file.module';
 import * as path from 'path';
 import { ServeStaticModule } from '@nestjs/serve-static';
+import { LogsModule } from './logs/logs.module';
+import { Log } from './logs/models/logs.model';
 
 @Module({
   imports: [
@@ -47,6 +49,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
         Status,
         RepairsType,
         RepairsDecision,
+        Log,
       ],
       autoLoadModels: true,
       synchronize: true,
@@ -54,6 +57,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
     DeregistrationModule,
     CatalogsModule,
     FileModule,
+    LogsModule,
   ],
 })
 export class AppModule {}
