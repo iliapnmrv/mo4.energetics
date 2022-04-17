@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
+import * as moment from 'moment';
+
 import sequelize from 'sequelize';
 import { Op } from 'sequelize';
 import { Deregistration } from 'src/deregistration/models/deregistration.model';
@@ -39,13 +41,39 @@ export class ItemService {
   }
 
   async filterItems(keys: { [key: string]: any }, search = '') {
+    console.log(keys);
+
     for (const key in keys) {
-      if (keys[key] === '') {
+      if (!keys[key] || keys[key] === 'null') {
         delete keys[key];
       } else {
-        keys[key] = keys[key].split(',');
+        if (
+          key === 'dateofdeliveryFrom' ||
+          key === 'dateofdeliveryTo' ||
+          key === 'guaranteeperiodFrom' ||
+          key === 'guaranteeperiodTo'
+        ) {
+          console.log(key.includes('To'), key.includes('From'));
+
+          if (key.includes('To')) {
+            keys[key.split('To')[0]] = {
+              [Op.gte]: moment(keys[key]).format(),
+            };
+            delete keys[key];
+          }
+          if (key.includes('From')) {
+            keys[key.split('From')[0]] = {
+              [Op.lte]: moment(keys[key]).format(),
+            };
+            delete keys[key];
+          }
+        } else {
+          keys[key] = keys[key].split(',');
+        }
       }
     }
+    console.log(keys);
+
     return await this.itemsRepository.findAll({
       include: [
         { model: Person, as: 'Person' },

@@ -94,8 +94,6 @@ export default function Qr({ data }: Props) {
     place_id: places,
   };
 
-  console.log(data);
-
   const saveData = async (values: IItem) => {
     let action: string = "";
     const logValues = changedKeys(initialState, values).map(
@@ -250,12 +248,15 @@ export default function Qr({ data }: Props) {
                 <Grid item xs={4}>
                   <DesktopDatePicker
                     label="Дата поставки"
-                    // clearable
                     inputFormat="DD/MM/yyyy"
                     value={values.dateofdelivery}
                     onChange={(value) => setFieldValue("dateofdelivery", value)}
                     renderInput={(params) => (
-                      <TextFieldInput {...params} fullWidth />
+                      <TextFieldInput
+                        {...params}
+                        fullWidth
+                        autoComplete="off"
+                      />
                     )}
                   />
                 </Grid>
@@ -290,7 +291,11 @@ export default function Qr({ data }: Props) {
                       setFieldValue("guaranteeperiod", value)
                     }
                     renderInput={(params) => (
-                      <TextFieldInput {...params} fullWidth />
+                      <TextFieldInput
+                        {...params}
+                        fullWidth
+                        autoComplete="off"
+                      />
                     )}
                   />
                 </Grid>

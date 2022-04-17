@@ -144,7 +144,11 @@ export default function Qr({ inventorynumber }: Props) {
                     value={values.dateofdelivery}
                     onChange={(value) => setFieldValue("dateofdelivery", value)}
                     renderInput={(params) => (
-                      <TextFieldInput {...params} fullWidth />
+                      <TextFieldInput
+                        {...params}
+                        fullWidth
+                        autoComplete="off"
+                      />
                     )}
                   />
                 </Grid>
@@ -158,7 +162,11 @@ export default function Qr({ inventorynumber }: Props) {
                       setFieldValue("guaranteeperiod", value)
                     }
                     renderInput={(params) => (
-                      <TextFieldInput {...params} fullWidth />
+                      <TextFieldInput
+                        {...params}
+                        fullWidth
+                        autoComplete="off"
+                      />
                     )}
                   />
                 </Grid>

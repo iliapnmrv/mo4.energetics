@@ -41,7 +41,7 @@ export default function Row({ row }: Props) {
 
   return (
     <>
-      <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
+      <TableRow>
         <TableCell>
           <IconButton
             aria-label="expand row"
@@ -63,7 +63,7 @@ export default function Row({ row }: Props) {
         <TableCell align="right">{row?.Person.personName}</TableCell>
         <TableCell align="right">{row?.Status.statusName}</TableCell>
         <TableCell align="right">
-          <div style={{ display: "flex", justifyContent: "space-around" }}>
+          <Box style={{ display: "flex", justifyContent: "space-around" }}>
             <Link href={`${row.inventorynumber}`}>
               <a>
                 <EditOutlinedIcon />
@@ -74,11 +74,11 @@ export default function Row({ row }: Props) {
                 <BuildOutlinedIcon />
               </a>
             </Link>
-          </div>
+          </Box>
         </TableCell>
       </TableRow>
       <TableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={7}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box sx={{ margin: 1 }}>
               <Typography variant="h6" gutterBottom component="div">

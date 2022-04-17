@@ -100,7 +100,11 @@ const Create = (props: Props) => {
                     value={values.startdate}
                     onChange={(value) => setFieldValue("startdate", value)}
                     renderInput={(params) => (
-                      <TextFieldInput {...params} fullWidth />
+                      <TextFieldInput
+                        {...params}
+                        fullWidth
+                        autoComplete="off"
+                      />
                     )}
                   />
                 </Grid>

@@ -15,6 +15,7 @@ const Search = ({ setSearch, search }: Props) => {
         p: "4px 8px",
         display: "flex",
         alignItems: "center",
+        opacity: 1,
       }}
     >
       <InputBase

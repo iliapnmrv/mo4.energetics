@@ -187,7 +187,11 @@ const EditRepair = ({ repair }: Props) => {
                     value={values.startdate}
                     onChange={(value) => setFieldValue("startdate", value)}
                     renderInput={(params) => (
-                      <TextFieldInput {...params} fullWidth />
+                      <TextFieldInput
+                        {...params}
+                        fullWidth
+                        autoComplete="off"
+                      />
                     )}
                   />
                 </Grid>
@@ -199,7 +203,11 @@ const EditRepair = ({ repair }: Props) => {
                     value={values.enddate}
                     onChange={(value) => setFieldValue("enddate", value)}
                     renderInput={(params) => (
-                      <TextFieldInput {...params} fullWidth />
+                      <TextFieldInput
+                        {...params}
+                        fullWidth
+                        autoComplete="off"
+                      />
                     )}
                   />
                 </Grid>
@@ -211,7 +219,11 @@ const EditRepair = ({ repair }: Props) => {
                     value={values.handoverdate}
                     onChange={(value) => setFieldValue("handoverdate", value)}
                     renderInput={(params) => (
-                      <TextFieldInput {...params} fullWidth />
+                      <TextFieldInput
+                        {...params}
+                        fullWidth
+                        autoComplete="off"
+                      />
                     )}
                   />
                 </Grid>

@@ -98,7 +98,11 @@ const Create = (props: Props) => {
                       setFieldValue("deregistrationdate", value)
                     }
                     renderInput={(params) => (
-                      <TextFieldInput {...params} fullWidth />
+                      <TextFieldInput
+                        {...params}
+                        fullWidth
+                        autoComplete="off"
+                      />
                     )}
                   />
                 </Grid>
