@@ -1,4 +1,12 @@
-import { Column, DataType, Model, Table } from 'sequelize-typescript';
+import {
+  BelongsTo,
+  Column,
+  DataType,
+  ForeignKey,
+  Model,
+  Table,
+} from 'sequelize-typescript';
+import { Item } from 'src/item/models/item.model';
 
 interface DeregistrationCreationAttrs {
   inventorynumber: number;
@@ -23,6 +31,12 @@ export class Deregistration extends Model<
   })
   id: number;
 
+  @ForeignKey(() => Item)
+  @BelongsTo(() => Item, {
+    foreignKey: 'inventorynumber',
+    as: 'Item',
+    targetKey: 'inventorynumber',
+  })
   @Column({
     type: DataType.INTEGER,
   })

@@ -1,4 +1,12 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { CreateItemDto } from './dto/create-item.dto';
 import { UpdateItemDto } from './dto/update-item.dto';
 import { ItemService } from './item.service';
@@ -6,6 +14,15 @@ import { ItemService } from './item.service';
 @Controller('items')
 export class ItemController {
   constructor(private service: ItemService) {}
+
+  @Get('/filter')
+  filterItems(
+    @Query('search') search: string,
+    @Query() keys: { [key: string]: any },
+  ) {
+    delete keys['search'];
+    return this.service.filterItems(keys, search);
+  }
 
   @Get(':id')
   getOne(@Param() params) {

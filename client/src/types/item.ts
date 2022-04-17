@@ -16,3 +16,10 @@ export type ILogs = {
   action: string;
   createdAt: Date;
 };
+
+export type IDeregistration = {
+  deregistrationdate: Date;
+  attachments: string[];
+  reason: string;
+  agreement: string;
+};

@@ -18,12 +18,9 @@ import {
   TableHead,
   TableRow,
   Typography,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogContentText,
-  DialogActions,
   TextField as TextFieldInput,
+  ListItemText,
+  List,
 } from "@mui/material";
 import ItemLayout from "layouts/ItemLayout";
 import { useAppDispatch, useAppSelector } from "hooks/redux";
@@ -33,6 +30,9 @@ import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
 import _ from "lodash";
 import { LOGS_CATALOG } from "constants/constants";
 import moment from "moment";
+import DeleteButton from "components/Buttons/Delete";
+import FileViewCaller from "components/FileView/FileViewDynamic";
+import FileViewDynamic from "components/FileView/FileViewDynamic";
 
 export async function getServerSideProps({ params }: any) {
   const { data } = await $api.get(`items/${params.id}`);
@@ -59,10 +59,8 @@ export default function Qr({ data }: Props) {
     Repairs,
     dateofdelivery,
     guaranteeperiod,
+    Deregistration,
   } = data;
-
-  console.log("data", data);
-  console.log("logs", Log);
 
   const initialState: IItem = {
     inventorynumber,
@@ -86,8 +84,6 @@ export default function Qr({ data }: Props) {
     });
   }
 
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState<boolean>(false);
-
   const { persons, places, statuses, types, repairTypes, repairDecisions } =
     useAppSelector((state) => state.catalogsReducer);
 
@@ -97,6 +93,8 @@ export default function Qr({ data }: Props) {
     type_id: types,
     place_id: places,
   };
+
+  console.log(data);
 
   const saveData = async (values: IItem) => {
     let action: string = "";
@@ -130,36 +128,8 @@ export default function Qr({ data }: Props) {
     router.push("/");
   };
 
-  const deleteItem = async () => {
-    const response = await $api.delete(`items/${inventorynumber}`);
-    setIsDeleteDialogOpen(false);
-    router.push("/");
-  };
-
   return (
     <ItemLayout>
-      <Dialog
-        open={isDeleteDialogOpen}
-        onClose={() => setIsDeleteDialogOpen(false)}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">
-          Удалить позицию {inventorynumber}?
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            Вы уверены, что хотите удалить позицию с инвентарным номером{" "}
-            {inventorynumber}?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setIsDeleteDialogOpen(false)}>Отменить</Button>
-          <Button onClick={() => deleteItem()} autoFocus>
-            Удалить
-          </Button>
-        </DialogActions>
-      </Dialog>
       <Formik
         initialValues={{
           inventorynumber,
@@ -173,7 +143,7 @@ export default function Qr({ data }: Props) {
           dateofdelivery,
           guaranteeperiod,
         }}
-        onSubmit={(values, actions) => {
+        onSubmit={(values) => {
           saveData(values);
         }}
       >
@@ -355,13 +325,7 @@ export default function Qr({ data }: Props) {
                     <Button size="large" type="submit">
                       Сохранить
                     </Button>
-                    <Button
-                      variant="outlined"
-                      color="error"
-                      onClick={() => setIsDeleteDialogOpen(true)}
-                    >
-                      Удалить
-                    </Button>
+                    <DeleteButton inventorynumber={inventorynumber} />
                   </Stack>
                 </Grid>
               </Grid>
@@ -456,6 +420,58 @@ export default function Qr({ data }: Props) {
                 </TableBody>
               </Table>
             </TableContainer>
+            <Typography
+              variant="h5"
+              sx={{
+                padding: "10px 0px",
+                display: "flex",
+                justifyContent: "space-between",
+              }}
+            >
+              Списание
+              <Link href={`/deregistration/${inventorynumber}/create`} passHref>
+                <Button variant="outlined">Списать позицию</Button>
+              </Link>
+            </Typography>
+            <Stack spacing={2} sx={{ width: "100%" }}>
+              {Deregistration?.map((item, index) => (
+                <>
+                  <Paper key={index} sx={{ padding: "10px" }}>
+                    <List>
+                      <ListItemText primary={`Причина: ${item.reason}`} />
+                      <ListItemText primary={`Соглашение: ${item.agreement}`} />
+                      <ListItemText
+                        primary={`Дата списания: ${moment(
+                          item.deregistrationdate
+                        ).format("DD.MM.YYYY")}`}
+                      />
+                    </List>
+
+                    {item.attachments.length ? (
+                      <>
+                        <Typography
+                          variant="h6"
+                          sx={{
+                            padding: "10px 0px",
+                          }}
+                        >
+                          Вложения (Акт на списание, дефектная ведомость, фото,
+                          согласование списания)
+                        </Typography>
+                        {item.attachments.map((attachment, index) => (
+                          <>
+                            <FileViewDynamic
+                              attachment={attachment}
+                              key={index}
+                            />
+                          </>
+                        ))}
+                      </>
+                    ) : null}
+                  </Paper>
+                </>
+              ))}
+            </Stack>
           </Box>
         )}
       </Formik>

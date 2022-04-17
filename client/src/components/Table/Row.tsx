@@ -16,6 +16,7 @@ import { ILogs } from "types/item";
 import { useAppSelector } from "hooks/redux";
 import moment from "moment";
 import {
+  Button,
   Card,
   CardContent,
   Divider,
@@ -23,6 +24,9 @@ import {
   Stack,
   TableContainer,
 } from "@mui/material";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import BuildOutlinedIcon from "@mui/icons-material/BuildOutlined";
+import DeleteButton from "components/Buttons/Delete";
 
 type Props = {
   row: IItem;
@@ -56,17 +60,21 @@ export default function Row({ row }: Props) {
           {row.name}
         </TableCell>
         <TableCell align="right">{row.supplier}</TableCell>
+        <TableCell align="right">{row?.Person.personName}</TableCell>
+        <TableCell align="right">{row?.Status.statusName}</TableCell>
         <TableCell align="right">
-          {
-            persons.filter((person) => person.personId === row.person_id)[0]
-              .personName
-          }
-        </TableCell>
-        <TableCell align="right">
-          {
-            statuses.filter((status) => status.statusId === row.status_id)[0]
-              .statusName
-          }
+          <div style={{ display: "flex", justifyContent: "space-around" }}>
+            <Link href={`${row.inventorynumber}`}>
+              <a>
+                <EditOutlinedIcon />
+              </a>
+            </Link>
+            <Link href={`/repairs/${row.inventorynumber}/create`}>
+              <a>
+                <BuildOutlinedIcon />
+              </a>
+            </Link>
+          </div>
         </TableCell>
       </TableRow>
       <TableRow>
@@ -89,10 +97,7 @@ export default function Row({ row }: Props) {
                       Номенкулатура устройства
                     </Typography>
                     <Typography variant="body2">
-                      {
-                        types.filter((type) => type.typeId === row.type_id)[0]
-                          .typeName
-                      }
+                      {row?.Type.typeName}
                     </Typography>
                   </CardContent>
                 </Card>
@@ -130,16 +135,29 @@ export default function Row({ row }: Props) {
                       Местоположение
                     </Typography>
                     <Typography variant="body2">
-                      {
-                        places.filter(
-                          (place) => place.placeId === row.place_id
-                        )[0].placeName
-                      }
+                      {row?.Place.placeName}
                     </Typography>
                   </CardContent>
                 </Card>
               </Stack>
             </Box>
+            <Stack
+              direction="row"
+              spacing={2}
+              justifyContent="space-between"
+              alignItems="center"
+              width={"100%"}
+            >
+              <Link href={`${row.inventorynumber}`}>
+                <a>
+                  <Button size="large" type="submit">
+                    Редактировать
+                  </Button>
+                </a>
+              </Link>
+
+              <DeleteButton inventorynumber={row.inventorynumber} />
+            </Stack>
             <Box sx={{ margin: 1 }}>
               <Typography variant="h6" gutterBottom component="div">
                 Журнал действий

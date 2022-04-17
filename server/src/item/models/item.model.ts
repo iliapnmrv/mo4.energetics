@@ -8,6 +8,7 @@ import {
   Model,
   Table,
 } from 'sequelize-typescript';
+import { Deregistration } from 'src/deregistration/models/deregistration.model';
 import { Log } from 'src/logs/models/logs.model';
 import { Repair } from 'src/repairs/models/repairs.model';
 import { Person } from './persons.model';
@@ -53,6 +54,11 @@ export class Item extends Model implements ItemCreationAttrs {
   @HasMany(() => Log, {
     foreignKey: 'inventorynumber',
     as: 'Log',
+    sourceKey: 'inventorynumber',
+  })
+  @HasMany(() => Deregistration, {
+    foreignKey: 'inventorynumber',
+    as: 'Deregistration',
     sourceKey: 'inventorynumber',
   })
   @Column({

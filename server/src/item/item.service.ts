@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import sequelize from 'sequelize';
+import { Op } from 'sequelize';
+import { Deregistration } from 'src/deregistration/models/deregistration.model';
 import { Item } from 'src/item/models/item.model';
 import { Log } from 'src/logs/models/logs.model';
 import { Repair } from 'src/repairs/models/repairs.model';
@@ -24,8 +26,7 @@ export class ItemService {
 
   async getAll(): Promise<any> {
     return await this.itemsRepository.findAll({
-      // raw: true,
-      // nest: true,
+      // person_id: { personName: 1 },
       include: [
         { model: Person, as: 'Person' },
         { model: Status, as: 'Status' },
@@ -33,6 +34,49 @@ export class ItemService {
         { model: Place, as: 'Place' },
         { model: Log, as: 'Log' },
       ],
+      order: [[{ model: Log, as: 'Log' }, 'createdAt', 'ASC']],
+    });
+  }
+
+  async filterItems(keys: { [key: string]: any }, search = '') {
+    for (const key in keys) {
+      if (keys[key] === '') {
+        delete keys[key];
+      } else {
+        keys[key] = keys[key].split(',');
+      }
+    }
+    return await this.itemsRepository.findAll({
+      include: [
+        { model: Person, as: 'Person' },
+        { model: Status, as: 'Status' },
+        { model: Type, as: 'Type' },
+        { model: Place, as: 'Place' },
+        { model: Log, as: 'Log' },
+      ],
+      where: {
+        [Op.and]: [
+          {
+            ...keys,
+            [Op.or]: [
+              {
+                name: search ? { [Op.like]: `%${search}%` } : { [Op.ne]: null },
+              },
+              {
+                supplier: search
+                  ? { [Op.like]: `%${search}%` }
+                  : { [Op.ne]: null },
+              },
+              {
+                description: search
+                  ? { [Op.like]: `%${search}%` }
+                  : { [Op.ne]: null },
+              },
+            ],
+          },
+        ],
+      },
+
       order: [[{ model: Log, as: 'Log' }, 'createdAt', 'ASC']],
     });
   }
@@ -47,6 +91,7 @@ export class ItemService {
         { model: Place, as: 'Place' },
         { model: Repair, as: 'Repairs' },
         { model: Log, as: 'Log' },
+        { model: Deregistration, as: 'Deregistration' },
       ],
       order: [[{ model: Log, as: 'Log' }, 'createdAt', 'ASC']],
     });

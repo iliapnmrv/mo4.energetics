@@ -17,8 +17,6 @@ export class DeregistrationService {
     dto: CreateDeregistrationDto,
     files: Express.Multer.File[],
   ) {
-    console.log(dto, files);
-
     const attachments: Array<string> = [];
     if (files) {
       for (const attachment of files) {

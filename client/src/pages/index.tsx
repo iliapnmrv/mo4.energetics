@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState } from "react";
 import Paper from "@mui/material/Paper";
 import { Box } from "@mui/system";
 import { Fab } from "@mui/material";
@@ -11,7 +11,7 @@ import TableRow from "@mui/material/TableRow";
 import AddIcon from "@mui/icons-material/Add";
 import Row from "../components/Table/Row";
 import $api from "../http";
-import { ILogs, IRepairs } from "../types/item";
+import { IDeregistration, ILogs, IRepairs } from "../types/item";
 import {
   IPerson,
   IPlace,
@@ -30,6 +30,8 @@ import {
   setTypes,
 } from "store/slices/catalogsSlice";
 import Link from "next/link";
+import Filters from "components/Filters/Filters";
+import Search from "components/Search/Search";
 
 export type IItem = {
   inventorynumber: string;
@@ -44,6 +46,11 @@ export type IItem = {
   description?: string;
   Repairs?: IRepairs[];
   Log?: ILogs[];
+  Place?: IPlace;
+  Status?: IStatus;
+  Type?: IType;
+  Person?: IPerson;
+  Deregistration?: IDeregistration[];
 };
 
 export async function getServerSideProps() {
@@ -90,6 +97,7 @@ const Home: React.FC<Props> = ({
   repairsTypes,
   repairsDecisions,
 }: Props) => {
+  const [items, setItems] = useState<IItem[]>(rows);
   const dispatch = useAppDispatch();
   dispatch(setPersons(persons));
   dispatch(setPlaces(places));
@@ -100,7 +108,8 @@ const Home: React.FC<Props> = ({
 
   return (
     <>
-      <Box sx={{ "& > :not(style)": { m: 1 } }}>
+      <Box sx={{ position: "relative" }}>
+        <Filters setItems={setItems} />
         <TableContainer component={Paper}>
           <Table aria-label="collapsible table">
             <TableHead>
@@ -111,10 +120,11 @@ const Home: React.FC<Props> = ({
                 <TableCell>Поставщик</TableCell>
                 <TableCell align="right">МОЛ</TableCell>
                 <TableCell align="right">Статус</TableCell>
+                <TableCell align="right">Действия</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {rows.map((row) => (
+              {items.map((row) => (
                 <Row key={row.name} row={row} />
               ))}
             </TableBody>
