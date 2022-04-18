@@ -57,13 +57,19 @@ export class ItemService {
 
           if (key.includes('To')) {
             keys[key.split('To')[0]] = {
-              [Op.gte]: moment(keys[key]).format(),
+              [Op.and]: {
+                ...keys[key.split('To')[0]]?.[Op.and],
+                [Op.lte]: moment(keys[key]).format(),
+              },
             };
             delete keys[key];
           }
           if (key.includes('From')) {
             keys[key.split('From')[0]] = {
-              [Op.lte]: moment(keys[key]).format(),
+              [Op.and]: {
+                ...keys[key.split('From')[0]]?.[Op.and],
+                [Op.gte]: moment(keys[key]).format(),
+              },
             };
             delete keys[key];
           }

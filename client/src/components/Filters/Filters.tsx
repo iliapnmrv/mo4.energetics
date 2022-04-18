@@ -37,9 +37,7 @@ const Filters = ({ setItems }: Props) => {
     useAppSelector((state) => state.catalogsReducer);
 
   const [search, setSearch] = useState("");
-  const ref = useRef(null);
 
-  console.log(ref?.current?.values);
   const filterItems = async (values?: any) => {
     const { data } = await $api.get(
       `items/filter/?${new URLSearchParams(values).toString()}&search=${search}`
@@ -79,7 +77,6 @@ const Filters = ({ setItems }: Props) => {
               onSubmit={(values) => {
                 filterItems(values);
               }}
-              innerRef={ref}
             >
               {({ values, setFieldValue, handleReset }) => (
                 <Form>
@@ -87,6 +84,7 @@ const Filters = ({ setItems }: Props) => {
                     <Grid item xs={4}>
                       <FormControl fullWidth>
                         <Field
+                          disabled={false}
                           width={100}
                           as="select"
                           defaultValue=""
@@ -106,6 +104,7 @@ const Filters = ({ setItems }: Props) => {
                     <Grid item xs={4}>
                       <FormControl fullWidth>
                         <Field
+                          disabled={false}
                           width={100}
                           as="select"
                           defaultValue=""
@@ -204,6 +203,7 @@ const Filters = ({ setItems }: Props) => {
                     <Grid item xs={4}>
                       <FormControl fullWidth>
                         <Field
+                          disabled={false}
                           width={100}
                           as="select"
                           defaultValue=""
@@ -224,6 +224,7 @@ const Filters = ({ setItems }: Props) => {
                     <Grid item xs={4}>
                       <FormControl fullWidth>
                         <Field
+                          disabled={false}
                           width={100}
                           as="select"
                           defaultValue=""

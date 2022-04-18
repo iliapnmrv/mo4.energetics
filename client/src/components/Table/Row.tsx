@@ -56,9 +56,7 @@ export default function Row({ row }: Props) {
             <a>{row.inventorynumber}</a>
           </Link>
         </TableCell>
-        <TableCell component="th" scope="row">
-          {row.name}
-        </TableCell>
+        <TableCell scope="row">{row.name}</TableCell>
         <TableCell align="right">{row.supplier}</TableCell>
         <TableCell align="right">{row?.Person.personName}</TableCell>
         <TableCell align="right">{row?.Status.statusName}</TableCell>

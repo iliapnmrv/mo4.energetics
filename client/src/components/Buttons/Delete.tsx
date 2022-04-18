@@ -53,11 +53,7 @@ const DeleteButton = ({ inventorynumber }: Props) => {
           </Button>
         </DialogActions>
       </Dialog>
-      <Button
-        // variant="outlined"
-        color="error"
-        onClick={() => setIsDeleteDialogOpen(true)}
-      >
+      <Button color="error" onClick={() => setIsDeleteDialogOpen(true)}>
         Удалить
       </Button>
     </>

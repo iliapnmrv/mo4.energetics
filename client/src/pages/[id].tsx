@@ -33,6 +33,7 @@ import moment from "moment";
 import DeleteButton from "components/Buttons/Delete";
 import FileViewCaller from "components/FileView/FileViewDynamic";
 import FileViewDynamic from "components/FileView/FileViewDynamic";
+import RepairsComponent from "components/Repairs/Repairs";
 
 export async function getServerSideProps({ params }: any) {
   const { data } = await $api.get(`items/${params.id}`);
@@ -335,62 +336,10 @@ export default function Qr({ data }: Props) {
                 </Grid>
               </Grid>
             </Form>
-            <Typography
-              variant="h5"
-              sx={{
-                padding: "10px 0px",
-                display: "flex",
-                justifyContent: "space-between",
-              }}
-            >
-              Ремонты
-              <Link href={`/repairs/${inventorynumber}/create`} passHref>
-                <Button variant="outlined">Добавить ремонт</Button>
-              </Link>
-            </Typography>
-            <TableContainer component={Paper}>
-              <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Номер заявки</TableCell>
-                    <TableCell align="right">Дата начала</TableCell>
-                    <TableCell align="right">Дата окончания</TableCell>
-                    <TableCell align="right">Стоимость</TableCell>
-                    <TableCell align="right">Решение по ремонту</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {Repairs?.map((repair) => (
-                    <TableRow key={repair.id}>
-                      <TableCell component="th" scope="row">
-                        <Link href={`repairs/${repair.requestnumber}`}>
-                          <a>{repair.requestnumber}</a>
-                        </Link>
-                      </TableCell>
-
-                      <TableCell align="right">
-                        {new Date(repair.startdate).toLocaleDateString()}
-                      </TableCell>
-                      <TableCell align="right">
-                        {repair.enddate
-                          ? new Date(repair.enddate).toLocaleDateString()
-                          : null}
-                      </TableCell>
-                      <TableCell align="right">{repair.price}</TableCell>
-                      <TableCell align="right">
-                        {" "}
-                        {
-                          repairDecisions.filter(
-                            (decision) =>
-                              decision.decisionId === repair.decision_id
-                          )[0]?.decisionName
-                        }
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
+            <RepairsComponent
+              inventorynumber={inventorynumber}
+              Repairs={Repairs}
+            />
             <Typography
               variant="h5"
               sx={{
