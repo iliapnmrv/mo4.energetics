@@ -401,7 +401,7 @@ export default function Qr({ data }: Props) {
                       />
                     </List>
 
-                    {item.attachments.length ? (
+                    {item?.attachments?.length ? (
                       <>
                         <Typography
                           variant="h6"

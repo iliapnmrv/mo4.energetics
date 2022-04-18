@@ -65,7 +65,7 @@ const Filters = ({ setItems }: Props) => {
       <Box sx={{ position: "sticky", top: "0px", opacity: 1 }}>
         <FormGroup>
           <FormControlLabel
-            control={<Checkbox defaultChecked checked={isRepairs} />}
+            control={<Checkbox checked={isRepairs} />}
             label="Ремонты"
             onChange={() => dispatch(setIsRepairs(!isRepairs))}
           />
@@ -229,7 +229,6 @@ const Filters = ({ setItems }: Props) => {
                           label="МОЛ"
                           component={Select}
                           multiple
-                          isClearable
                         >
                           {persons.map((person) => (
                             <MenuItem value={person.personId} key={person.id}>

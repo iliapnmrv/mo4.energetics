@@ -12,7 +12,7 @@ const ItemLayout = ({ children }: Props) => {
   const router = useRouter();
   return (
     <div className={styles.flex}>
-      <Box>
+      <Box width={"100px"}>
         <Link href="/">
           <a>
             <Button onClick={() => router.back()}>

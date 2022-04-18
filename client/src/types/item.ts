@@ -19,7 +19,12 @@ export type ILogs = {
 
 export type IDeregistration = {
   deregistrationdate: Date;
-  attachments: string[];
+  attachments: IFile[];
   reason: string;
   agreement: string;
+};
+
+export type IFile = {
+  path: string;
+  name: string;
 };

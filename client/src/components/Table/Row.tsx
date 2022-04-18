@@ -61,15 +61,21 @@ export default function Row({ row }: Props) {
         <TableCell scope="row">{row.name}</TableCell>
         <TableCell align="right">{row?.Place?.placeName}</TableCell>
         <TableCell align="right">{row?.Person?.personName}</TableCell>
-        <TableCell align="right">
+        <TableCell align="right" colSpan={isRepairs ? 2 : 1}>
           {isRepairs ? (
-            row?.Repairs?.[0]?.enddate && row?.Repairs?.[0]?.handoverdate ? (
-              <Typography color={"red"}>
-                {moment(row?.Repairs?.[0]?.startdate).format("DD.MM.YYYY")}
-              </Typography>
-            ) : (
-              moment(row?.Repairs?.[0]?.startdate).format("DD.MM.YYYY")
-            )
+            <>
+              <TableCell>
+                {row?.Repairs?.[0]?.enddate &&
+                row?.Repairs?.[0]?.handoverdate ? (
+                  <Typography color={"red"}>
+                    {moment(row?.Repairs?.[0]?.startdate).format("DD.MM.YYYY")}
+                  </Typography>
+                ) : (
+                  moment(row?.Repairs?.[0]?.startdate).format("DD.MM.YYYY")
+                )}
+              </TableCell>
+              <TableCell>{row?.Repairs?.[0]?.comments}</TableCell>
+            </>
           ) : (
             row?.Status?.statusName
           )}
@@ -90,7 +96,7 @@ export default function Row({ row }: Props) {
         </TableCell>
       </TableRow>
       <TableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={7}>
+        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={8}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box sx={{ margin: 1 }}>
               <Typography variant="h6" gutterBottom component="div">

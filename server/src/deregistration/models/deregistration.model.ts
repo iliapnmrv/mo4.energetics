@@ -13,8 +13,13 @@ interface DeregistrationCreationAttrs {
   deregistrationdate: Date;
   reason: string;
   agreement: string;
-  attachments: string[];
+  attachments: IFile[];
 }
+
+export type IFile = {
+  name: string;
+  path: string;
+};
 
 @Table({
   tableName: 'deregistration',
@@ -59,14 +64,14 @@ export class Deregistration extends Model<
 
   @Column({
     get() {
-      return this.getDataValue('attachments').split(';');
+      return JSON.parse(this.getDataValue('attachments'));
     },
     set(val: Array<string>) {
-      this.setDataValue('attachments', val.join(';'));
+      return this.setDataValue('attachments', JSON.stringify(val));
     },
     type: DataType.STRING,
   })
-  attachments: string[];
+  attachments: IFile[];
 
   @Column({
     defaultValue: DataType.NOW,

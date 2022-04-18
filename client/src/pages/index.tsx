@@ -114,41 +114,46 @@ const Home: React.FC<Props> = ({
       <Box sx={{ position: "relative" }}>
         <Filters setItems={setItems} />
         {items.length ? (
-          <TableContainer component={Paper}>
-            <Table aria-label="collapsible table">
+          <TableContainer
+            component={Paper}
+            sx={{ overflowX: "initial", position: "sticky" }}
+          >
+            <Table stickyHeader aria-label="collapsible sticky table">
               <TableHead>
                 <TableRow>
                   <TableCell />
-                  <TableCell>Инвентарный номер</TableCell>
+                  <TableCell width={"10%"}>Инвентарный номер</TableCell>
                   <TableCell>Название</TableCell>
                   <TableCell>Местоположение</TableCell>
                   <TableCell align="right">МОЛ</TableCell>
-                  <TableCell align="right">
-                    {isRepairs ? "Дата начала ремонта" : "Статус"}
+                  <TableCell
+                    align="center"
+                    colSpan={isRepairs ? 2 : 1}
+                    width={"25%"}
+                  >
+                    {isRepairs ? "Ремонты" : "Статус"}
                   </TableCell>
                   <TableCell align="right">Действия</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {items.map((row) => (
-                  <Row key={row.name} row={row} />
+                  <Row key={row.inventorynumber} row={row} />
                 ))}
               </TableBody>
             </Table>
           </TableContainer>
         ) : (
-          <TableRow>
-            <Typography
-              variant="h5"
-              sx={{
-                padding: "10px 0px",
-                display: "flex",
-                justifyContent: "space-between",
-              }}
-            >
-              По вашему запросу не было найдено элементов
-            </Typography>
-          </TableRow>
+          <Typography
+            variant="h5"
+            sx={{
+              padding: "10px 0px",
+              display: "flex",
+              justifyContent: "space-between",
+            }}
+          >
+            По вашему запросу не было найдено элементов
+          </Typography>
         )}
         <Link
           href={{

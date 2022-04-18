@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { FileService, FileType } from 'src/file/file.service';
 import { CreateDeregistrationDto } from './dto/create-repair.dto';
-import { Deregistration } from './models/deregistration.model';
+import { Deregistration, IFile } from './models/deregistration.model';
 
 @Injectable()
 export class DeregistrationService {
@@ -17,14 +17,16 @@ export class DeregistrationService {
     dto: CreateDeregistrationDto,
     files: Express.Multer.File[],
   ) {
-    const attachments: Array<string> = [];
+    const attachments: Array<IFile> = [];
     if (files) {
       for (const attachment of files) {
         const imagePath = this.fileService.createFile(
           FileType.IMAGE,
           attachment,
         );
-        attachments.push(imagePath);
+        console.log({ path: imagePath, name: attachment.originalname });
+
+        attachments.push({ path: imagePath, name: attachment.originalname });
       }
     }
     const deregistration = await this.deregistrationRepository.create({
@@ -34,4 +36,10 @@ export class DeregistrationService {
     });
     return deregistration;
   }
+
+  async updateDeregistration(
+    id: number,
+    dto: CreateDeregistrationDto,
+    files: Express.Multer.File[],
+  ) {}
 }
