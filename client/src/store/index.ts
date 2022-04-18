@@ -5,9 +5,11 @@ import { persistReducer } from "redux-persist";
 import thunk, { ThunkAction } from "redux-thunk";
 import { useDispatch } from "react-redux";
 import { catalogsReducer } from "./slices/catalogsSlice";
+import { repairsReducer } from "./slices/repairsSlice";
 
 const reducers = combineReducers({
   catalogsReducer,
+  repairsReducer,
 });
 
 const persistConfig = {

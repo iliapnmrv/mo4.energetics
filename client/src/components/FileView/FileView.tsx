@@ -1,5 +1,6 @@
 import React from "react";
 import { Box, Button } from "@mui/material";
+//@ts-ignore
 import FileViewer from "react-file-viewer";
 
 type Props = {
@@ -16,7 +17,7 @@ const FileView = ({ attachment }: Props) => {
         <FileViewer
           fileType={attachment?.split(".").pop()}
           filePath={`http://localhost:8001/${attachment}`}
-          onError={(e) => console.log(e)}
+          onError={(e: React.ChangeEvent<HTMLInputElement>) => console.log(e)}
         />
       </Box>
     </>

@@ -35,6 +35,7 @@ export class ItemService {
         { model: Type, as: 'Type' },
         { model: Place, as: 'Place' },
         { model: Log, as: 'Log' },
+        { model: Repair, as: 'Repairs' },
       ],
       order: [[{ model: Log, as: 'Log' }, 'createdAt', 'ASC']],
     });
@@ -53,8 +54,6 @@ export class ItemService {
           key === 'guaranteeperiodFrom' ||
           key === 'guaranteeperiodTo'
         ) {
-          console.log(key.includes('To'), key.includes('From'));
-
           if (key.includes('To')) {
             keys[key.split('To')[0]] = {
               [Op.and]: {
@@ -87,6 +86,7 @@ export class ItemService {
         { model: Type, as: 'Type' },
         { model: Place, as: 'Place' },
         { model: Log, as: 'Log' },
+        { model: Repair, as: 'Repairs' },
       ],
       where: {
         [Op.and]: [

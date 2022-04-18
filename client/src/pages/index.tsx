@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Paper from "@mui/material/Paper";
 import { Box } from "@mui/system";
-import { Fab } from "@mui/material";
+import { Fab, Typography } from "@mui/material";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -22,6 +22,7 @@ import {
 } from "types/catalogs";
 import { useAppDispatch, useAppSelector } from "hooks/redux";
 import {
+  catalogsReducer,
   setPersons,
   setPlaces,
   setRepairDecisions,
@@ -106,30 +107,49 @@ const Home: React.FC<Props> = ({
   dispatch(setRepairTypes(repairsTypes));
   dispatch(setRepairDecisions(repairsDecisions));
 
+  const { isRepairs } = useAppSelector((state) => state.repairsReducer);
+
   return (
     <>
       <Box sx={{ position: "relative" }}>
         <Filters setItems={setItems} />
-        <TableContainer component={Paper}>
-          <Table aria-label="collapsible table">
-            <TableHead>
-              <TableRow>
-                <TableCell />
-                <TableCell>Инвентарный номер</TableCell>
-                <TableCell>Название</TableCell>
-                <TableCell>Поставщик</TableCell>
-                <TableCell align="right">МОЛ</TableCell>
-                <TableCell align="right">Статус</TableCell>
-                <TableCell align="right">Действия</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {items.map((row) => (
-                <Row key={row.name} row={row} />
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+        {items.length ? (
+          <TableContainer component={Paper}>
+            <Table aria-label="collapsible table">
+              <TableHead>
+                <TableRow>
+                  <TableCell />
+                  <TableCell>Инвентарный номер</TableCell>
+                  <TableCell>Название</TableCell>
+                  <TableCell>Местоположение</TableCell>
+                  <TableCell align="right">МОЛ</TableCell>
+                  <TableCell align="right">
+                    {isRepairs ? "Дата начала ремонта" : "Статус"}
+                  </TableCell>
+                  <TableCell align="right">Действия</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {items.map((row) => (
+                  <Row key={row.name} row={row} />
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        ) : (
+          <TableRow>
+            <Typography
+              variant="h5"
+              sx={{
+                padding: "10px 0px",
+                display: "flex",
+                justifyContent: "space-between",
+              }}
+            >
+              По вашему запросу не было найдено элементов
+            </Typography>
+          </TableRow>
+        )}
         <Link
           href={{
             pathname: "/create",

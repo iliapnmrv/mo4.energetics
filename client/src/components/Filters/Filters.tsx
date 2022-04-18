@@ -11,6 +11,9 @@ import {
   Typography,
   TextField as TextFieldInput,
   Box,
+  FormGroup,
+  FormControlLabel,
+  Checkbox,
 } from "@mui/material";
 import { TextField, Select } from "formik-mui";
 import React, {
@@ -22,11 +25,12 @@ import React, {
 } from "react";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { Field, Form, Formik } from "formik";
-import { useAppSelector } from "hooks/redux";
+import { useAppDispatch, useAppSelector } from "hooks/redux";
 import Search from "components/Search/Search";
 import $api from "http/index";
 import { IItem } from "pages";
 import { DateRangePicker, DesktopDatePicker } from "@mui/lab";
+import { setIsRepairs } from "store/slices/repairsSlice";
 
 type Props = {
   setItems: Dispatch<SetStateAction<IItem[]>>;
@@ -35,6 +39,9 @@ type Props = {
 const Filters = ({ setItems }: Props) => {
   const { persons, places, statuses, types, repairTypes, repairDecisions } =
     useAppSelector((state) => state.catalogsReducer);
+  const { isRepairs } = useAppSelector((state) => state.repairsReducer);
+
+  const dispatch = useAppDispatch();
 
   const [search, setSearch] = useState("");
 
@@ -46,14 +53,24 @@ const Filters = ({ setItems }: Props) => {
   };
 
   useEffect(() => {
-    filterItems();
-  }, [search]);
+    if (isRepairs) {
+      filterItems({ status_id: [2] });
+    } else {
+      filterItems();
+    }
+  }, [search, isRepairs]);
 
   return (
     <>
       <Box sx={{ position: "sticky", top: "0px", opacity: 1 }}>
-        <Search setSearch={setSearch} search={search} />
-
+        <FormGroup>
+          <FormControlLabel
+            control={<Checkbox defaultChecked checked={isRepairs} />}
+            label="Ремонты"
+            onChange={() => dispatch(setIsRepairs(!isRepairs))}
+          />
+        </FormGroup>
+        <Search search={search} setSearch={setSearch} />
         <Accordion>
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
@@ -66,7 +83,7 @@ const Filters = ({ setItems }: Props) => {
             <Formik
               initialValues={{
                 person_id: [],
-                status_id: [],
+                status_id: [isRepairs ? 2 : null],
                 type_id: [],
                 place_id: [],
                 guaranteeperiodFrom: null,
@@ -77,6 +94,7 @@ const Filters = ({ setItems }: Props) => {
               onSubmit={(values) => {
                 filterItems(values);
               }}
+              enableReinitialize
             >
               {({ values, setFieldValue, handleReset }) => (
                 <Form>

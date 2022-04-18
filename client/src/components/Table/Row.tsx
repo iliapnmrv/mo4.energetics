@@ -39,6 +39,8 @@ export default function Row({ row }: Props) {
     (state) => state.catalogsReducer
   );
 
+  const { isRepairs } = useAppSelector((state) => state.repairsReducer);
+
   return (
     <>
       <TableRow>
@@ -57,9 +59,21 @@ export default function Row({ row }: Props) {
           </Link>
         </TableCell>
         <TableCell scope="row">{row.name}</TableCell>
-        <TableCell align="right">{row.supplier}</TableCell>
-        <TableCell align="right">{row?.Person.personName}</TableCell>
-        <TableCell align="right">{row?.Status.statusName}</TableCell>
+        <TableCell align="right">{row?.Place?.placeName}</TableCell>
+        <TableCell align="right">{row?.Person?.personName}</TableCell>
+        <TableCell align="right">
+          {isRepairs ? (
+            row?.Repairs?.[0]?.enddate && row?.Repairs?.[0]?.handoverdate ? (
+              <Typography color={"red"}>
+                {moment(row?.Repairs?.[0]?.startdate).format("DD.MM.YYYY")}
+              </Typography>
+            ) : (
+              moment(row?.Repairs?.[0]?.startdate).format("DD.MM.YYYY")
+            )
+          ) : (
+            row?.Status?.statusName
+          )}
+        </TableCell>
         <TableCell align="right">
           <Box style={{ display: "flex", justifyContent: "space-around" }}>
             <Link href={`${row.inventorynumber}`}>
@@ -95,7 +109,7 @@ export default function Row({ row }: Props) {
                       Номенкулатура устройства
                     </Typography>
                     <Typography variant="body2">
-                      {row?.Type.typeName}
+                      {row?.Type?.typeName}
                     </Typography>
                   </CardContent>
                 </Card>
@@ -130,11 +144,9 @@ export default function Row({ row }: Props) {
                 <Card variant="outlined" sx={{ border: "0px" }}>
                   <CardContent sx={{ padding: "2px" }}>
                     <Typography color="text.secondary" sx={{ fontSize: 14 }}>
-                      Местоположение
+                      Поставщик
                     </Typography>
-                    <Typography variant="body2">
-                      {row?.Place.placeName}
-                    </Typography>
+                    <Typography variant="body2">{row?.supplier}</Typography>
                   </CardContent>
                 </Card>
               </Stack>
