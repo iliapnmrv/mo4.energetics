@@ -1,113 +1,80 @@
 import {
   Box,
   Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
   FormControl,
   Grid,
   MenuItem,
   Typography,
   TextField as TextFieldInput,
   Stack,
+  Paper,
 } from "@mui/material";
-import { Field, Form, Formik } from "formik";
+import { Field, FieldArray, Form, Formik } from "formik";
 import { Select, TextField } from "formik-mui";
 import { useAppSelector } from "hooks/redux";
 import $api from "http/index";
 import ItemLayout from "layouts/ItemLayout";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
-import { IRepairs } from "types/item";
+import React, { useEffect, useState } from "react";
 import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
+import CloseIcon from "@mui/icons-material/Close";
+import { IDeregistration, IFile } from "types/item";
 
 export async function getServerSideProps({ params }: any) {
-  const { data: repair } = await $api.get(`repairs/${params.id}`);
+  const { data: deregistration } = await $api.get(
+    `deregistration/${params.id}`
+  );
   return {
     props: {
-      repair,
+      deregistration,
     }, // will be passed to the page component as props
   };
 }
 
 type Props = {
-  repair: IRepairs;
+  deregistration: IDeregistration;
 };
 
-const EditRepair = ({ repair }: Props) => {
+const EditDeregistration = ({ deregistration }: Props) => {
   const router = useRouter();
 
-  const {
-    inventorynumber,
-    requestnumber,
-    startdate,
-    enddate,
-    handoverdate,
-    decision_id,
-    type_id,
-    comments,
-    price,
-  } = repair;
-
-  const { repairTypes, repairDecisions } = useAppSelector(
-    (state) => state.catalogsReducer
+  const [filesToDelete, setFilesToDelete] = useState<(string | undefined)[]>(
+    []
   );
 
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState<boolean>(false);
+  const saveDeregistration = async (values: any) => {
+    const data = new FormData();
 
-  const saveRepair = async (values) => {
-    const response = await $api.put(`repairs/${router.query.id}`, values);
-    router.push(`/${inventorynumber}`);
+    for (const key in values) {
+      if (key === "attachments") {
+        if (values[key].length) {
+          for (let i = 0; i < values[key].length; i++) {
+            if (values[key][i] instanceof File) {
+              data.append("files", values[key][i]);
+            } else {
+              data.append(key, JSON.stringify(values[key][i]));
+            }
+          }
+        } else {
+          data.append(key, values[key]);
+        }
+      } else {
+        data.append(key, values[key]);
+      }
+    }
+
+    const { data: responseData } = await $api.put(
+      `deregistration/${router.query.id}`,
+      data
+    );
+    router.push(`/${responseData.inventorynumber}`);
   };
-
-  const deleteItem = async () => {
-    const response = await $api.delete(`repairs/${router.query.id}`);
-    setIsDeleteDialogOpen(false);
-    router.push(`/${inventorynumber}`);
-  };
-
   return (
     <ItemLayout>
-      <Dialog
-        open={isDeleteDialogOpen}
-        onClose={() => setIsDeleteDialogOpen(false)}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">
-          Удалить заявку на ремонт {router.query.id}?
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            Вы уверены, что хотите удалить заявку на ремонт с инвентарным
-            номером {inventorynumber}?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setIsDeleteDialogOpen(false)}>Отменить</Button>
-          <Button onClick={() => deleteItem()} autoFocus>
-            Удалить
-          </Button>
-        </DialogActions>
-      </Dialog>
       <Formik
-        initialValues={{
-          inventorynumber,
-          requestnumber,
-          startdate,
-          enddate,
-          handoverdate,
-          decision_id,
-          type_id,
-          comments,
-          price,
-        }}
+        initialValues={deregistration}
         onSubmit={(values, actions) => {
-          console.log(values);
-          //   saveData(values);
-          saveRepair(values);
+          saveDeregistration(values);
         }}
       >
         {({ values, setFieldValue }) => (
@@ -120,104 +87,29 @@ const EditRepair = ({ repair }: Props) => {
           >
             <Form>
               <Typography variant="h4" component="h4">
-                Изменение заявки на ремонт №{router.query.id}
+                Изменить списание
               </Typography>
               <Grid container spacing={2}>
                 <Grid item xs={4}>
                   <Field
-                    label="Номер заявки на ремонт"
-                    type="number"
-                    name="requestnumber"
-                    placeholder="Номер заявки на ремонт"
+                    label="Причина списания"
+                    type="text"
+                    name="reason"
+                    placeholder="Причина списания"
                     style={{
                       width: "100%",
                     }}
-                    disabled
                     component={TextField}
                   />
                 </Grid>
                 <Grid item xs={4}>
-                  <FormControl fullWidth>
-                    <Field
-                      width={100}
-                      as="select"
-                      name="type_id"
-                      defaultValue=""
-                      label="Вид ремонта"
-                      component={Select}
-                    >
-                      {repairTypes.map((repair) => {
-                        return (
-                          <MenuItem value={repair.typeId} key={repair.typeId}>
-                            {repair.typeName}
-                          </MenuItem>
-                        );
-                      })}
-                    </Field>
-                  </FormControl>
-                </Grid>
-                <Grid item xs={4}>
-                  <FormControl fullWidth>
-                    <Field
-                      width={100}
-                      as="select"
-                      name="decision_id"
-                      defaultValue=""
-                      label="Решение по ремонту"
-                      component={Select}
-                    >
-                      {repairDecisions.map((decision) => {
-                        return (
-                          <MenuItem
-                            value={decision.decisionId}
-                            key={decision.decisionId}
-                          >
-                            {decision.decisionName}
-                          </MenuItem>
-                        );
-                      })}
-                    </Field>
-                  </FormControl>
-                </Grid>
-                <Grid item xs={4}>
                   <DesktopDatePicker
-                    label="Дата начала ремонта"
-                    // clearable
+                    label="Дата списания"
                     inputFormat="DD/MM/yyyy"
-                    value={values.startdate}
-                    onChange={(value) => setFieldValue("startdate", value)}
-                    renderInput={(params) => (
-                      <TextFieldInput
-                        {...params}
-                        fullWidth
-                        autoComplete="off"
-                      />
-                    )}
-                  />
-                </Grid>
-                <Grid item xs={4}>
-                  <DesktopDatePicker
-                    label="Дата окончания ремонта"
-                    // clearable
-                    inputFormat="DD/MM/yyyy"
-                    value={values.enddate}
-                    onChange={(value) => setFieldValue("enddate", value)}
-                    renderInput={(params) => (
-                      <TextFieldInput
-                        {...params}
-                        fullWidth
-                        autoComplete="off"
-                      />
-                    )}
-                  />
-                </Grid>
-                <Grid item xs={4}>
-                  <DesktopDatePicker
-                    label="Дата передачи"
-                    // clearable
-                    inputFormat="DD/MM/yyyy"
-                    value={values.handoverdate}
-                    onChange={(value) => setFieldValue("handoverdate", value)}
+                    value={values.deregistrationdate}
+                    onChange={(value) =>
+                      setFieldValue("deregistrationdate", value)
+                    }
                     renderInput={(params) => (
                       <TextFieldInput
                         {...params}
@@ -229,47 +121,85 @@ const EditRepair = ({ repair }: Props) => {
                 </Grid>
                 <Grid item xs={4}>
                   <Field
-                    label="Стоимость ремонта"
-                    type="number"
-                    name="price"
-                    placeholder="Стоимость ремонта"
+                    label="Согласование"
+                    type="text"
+                    name="agreement"
+                    placeholder="Согласование"
                     style={{
                       width: "100%",
                     }}
                     component={TextField}
                   />
                 </Grid>
-                <Grid item xs={8}>
-                  <Field
-                    label="Примечания"
-                    name="comments"
-                    placeholder="Примечания"
-                    style={{
-                      width: "100%",
-                    }}
-                    component={TextField}
-                  />
-                </Grid>
-                <Stack
-                  direction="row"
-                  spacing={2}
-                  justifyContent="space-between"
-                  alignItems="center"
-                  width={"100%"}
-                  marginTop={2}
-                >
-                  <Button size="large" type="submit">
-                    Сохранить
-                  </Button>
-                  <Button
-                    size="large"
-                    variant="outlined"
-                    color="error"
-                    onClick={() => setIsDeleteDialogOpen(true)}
-                  >
-                    Удалить ремонт
-                  </Button>
-                </Stack>
+
+                <FieldArray
+                  name="attachments"
+                  render={({ remove, insert }) => (
+                    <>
+                      <Typography
+                        variant="h6"
+                        sx={{
+                          padding: "10px 0px",
+                          display: "flex",
+                          width: "100%",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        Вложения (Акт на списание, дефектная ведомость, фото,
+                        согласование списания)
+                        <Button variant="outlined" component="label">
+                          Загрузить файлы
+                          <input
+                            name="attachments"
+                            type="file"
+                            multiple
+                            hidden
+                            onChange={(
+                              e: React.ChangeEvent<HTMLInputElement>
+                            ) => {
+                              if (e.currentTarget.files?.length) {
+                                const { files } = e.currentTarget;
+                                for (let i = 0; i < files.length; i++) {
+                                  insert(values.attachments.length, files[i]);
+                                }
+                              }
+                            }}
+                          />
+                        </Button>
+                      </Typography>
+                      <Stack spacing={2} sx={{ width: "100%" }}>
+                        {values?.attachments?.map((file: IFile, index) => (
+                          <>
+                            <Paper
+                              key={index}
+                              sx={{
+                                display: "flex",
+                                justifyContent: "space-between",
+                                padding: "15px 20px",
+                              }}
+                            >
+                              <div>&nbsp;{file.name}</div>
+                              <CloseIcon
+                                sx={{ cursor: "pointer" }}
+                                onClick={() => {
+                                  remove(index);
+                                  setFilesToDelete([
+                                    ...filesToDelete,
+                                    file.path,
+                                  ]);
+                                }}
+                              />
+                            </Paper>
+                          </>
+                        ))}
+                      </Stack>
+                      {console.log(values.attachments, filesToDelete)}
+                    </>
+                  )}
+                />
+                <Button size="large" type="submit">
+                  Сохранить
+                </Button>
               </Grid>
             </Form>
           </Box>
@@ -279,4 +209,4 @@ const EditRepair = ({ repair }: Props) => {
   );
 };
 
-export default EditRepair;
+export default EditDeregistration;

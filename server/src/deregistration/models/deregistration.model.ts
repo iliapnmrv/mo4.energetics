@@ -64,7 +64,9 @@ export class Deregistration extends Model<
 
   @Column({
     get() {
-      return JSON.parse(this.getDataValue('attachments'));
+      return this.getDataValue('attachments') !== undefined
+        ? JSON.parse(this.getDataValue('attachments'))
+        : null;
     },
     set(val: Array<string>) {
       return this.setDataValue('attachments', JSON.stringify(val));

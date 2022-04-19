@@ -400,7 +400,11 @@ export default function Qr({ data }: Props) {
                         ).format("DD.MM.YYYY")}`}
                       />
                     </List>
-
+                    <Link href={`deregistration/${item.id}`}>
+                      <a>
+                        <Button variant="outlined">Редактировать</Button>
+                      </a>
+                    </Link>
                     {item?.attachments?.length ? (
                       <>
                         <Typography
@@ -412,11 +416,13 @@ export default function Qr({ data }: Props) {
                           Вложения (Акт на списание, дефектная ведомость, фото,
                           согласование списания)
                         </Typography>
+
                         {item.attachments.map((attachment, index) => (
                           <>
                             <FileViewDynamic
                               attachment={attachment}
                               key={index}
+                              deregistrationId={item.id}
                             />
                           </>
                         ))}

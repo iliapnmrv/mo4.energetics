@@ -10,11 +10,4 @@ const $api = axios.create({
   },
 });
 
-const $fileUploadApi = axios.create({
-  baseURL: API_URL,
-  headers: {
-    "Access-Control-Allow-Origin": "*",
-  },
-});
-
 export default $api;

@@ -2,6 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import * as path from 'path';
 import * as fs from 'fs';
 import * as uuid from 'uuid';
+import { DeleteFileDto } from './dto/delete-file.dto';
 
 export enum FileType {
   IMAGE = 'image',
@@ -24,10 +25,12 @@ export class FileService {
       throw new HttpException(e.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
-  // deleteFile(filePath: string): void {
-  //   const file = path.resolve(__dirname, '..', 'static', filePath);
-  //   if (fs.existsSync(file)) {
-  //     fs.unlinkSync(file);
-  //   }
-  // }
+  deleteFile(dto: DeleteFileDto): void {
+    for (const filePath of dto.files) {
+      const file = path.resolve(__dirname, '..', 'static', filePath);
+      if (fs.existsSync(file)) {
+        fs.unlinkSync(file);
+      }
+    }
+  }
 }

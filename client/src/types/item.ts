@@ -18,6 +18,7 @@ export type ILogs = {
 };
 
 export type IDeregistration = {
+  id: number;
   deregistrationdate: Date;
   attachments: IFile[];
   reason: string;
