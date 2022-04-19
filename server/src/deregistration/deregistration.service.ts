@@ -90,6 +90,13 @@ export class DeregistrationService {
   }
 
   async deleteDeregistration(id: number) {
+    const deregistration = await this.deregistrationRepository.findOne({
+      where: { id },
+    });
+    const filesToDelete: string[] = deregistration.attachments.map(
+      (file) => file.path,
+    );
+    await this.fileService.deleteFile({ files: filesToDelete });
     return await this.deregistrationRepository.destroy({
       where: { id },
     });

@@ -8,6 +8,11 @@ import {
   TextField as TextFieldInput,
   Stack,
   Paper,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
 } from "@mui/material";
 import { Field, FieldArray, Form, Formik } from "formik";
 import { Select, TextField } from "formik-mui";
@@ -41,9 +46,22 @@ const EditDeregistration = ({ deregistration }: Props) => {
   const [filesToDelete, setFilesToDelete] = useState<(string | undefined)[]>(
     []
   );
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState<boolean>(false);
 
   const saveDeregistration = async (values: any) => {
     const data = new FormData();
+
+    if (
+      filesToDelete.length &&
+      !filesToDelete.every((item) => item === undefined)
+    ) {
+      const { data } = await $api.delete("file", {
+        data: {
+          files: filesToDelete.filter((item) => typeof item === "string"),
+        },
+      });
+      console.log(data);
+    }
 
     for (const key in values) {
       if (key === "attachments") {
@@ -69,6 +87,13 @@ const EditDeregistration = ({ deregistration }: Props) => {
     );
     router.push(`/${responseData.inventorynumber}`);
   };
+
+  const deleteItem = async () => {
+    const { data } = await $api.delete(`deregistration/${router.query.id}`);
+    setIsDeleteDialogOpen(false);
+    router.push(`/${data.inventorynumber}`);
+  };
+
   return (
     <ItemLayout>
       <Formik
@@ -197,14 +222,56 @@ const EditDeregistration = ({ deregistration }: Props) => {
                     </>
                   )}
                 />
-                <Button size="large" type="submit">
-                  Сохранить
-                </Button>
+                <Grid item xs={12}>
+                  <Stack
+                    direction="row"
+                    spacing={2}
+                    justifyContent="space-between"
+                    alignItems="center"
+                    width={"100%"}
+                  >
+                    <Button size="large" type="submit">
+                      Сохранить
+                    </Button>
+                    <Button
+                      color="error"
+                      onClick={() => setIsDeleteDialogOpen(true)}
+                    >
+                      Удалить
+                    </Button>
+                  </Stack>
+                </Grid>
               </Grid>
             </Form>
           </Box>
         )}
       </Formik>
+      <Dialog
+        open={isDeleteDialogOpen}
+        onClose={() => setIsDeleteDialogOpen(false)}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          Удалить заявку на списание?
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Вы уверены, что хотите удалить заявку на списание?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setIsDeleteDialogOpen(false)}>Отменить</Button>
+          <Button
+            onClick={() => deleteItem()}
+            autoFocus
+            variant="outlined"
+            color="error"
+          >
+            Удалить
+          </Button>
+        </DialogActions>
+      </Dialog>
     </ItemLayout>
   );
 };

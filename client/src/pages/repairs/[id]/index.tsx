@@ -87,7 +87,12 @@ const EditRepair = ({ repair }: Props) => {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setIsDeleteDialogOpen(false)}>Отменить</Button>
-          <Button onClick={() => deleteItem()} autoFocus>
+          <Button
+            onClick={() => deleteItem()}
+            autoFocus
+            variant="outlined"
+            color="error"
+          >
             Удалить
           </Button>
         </DialogActions>

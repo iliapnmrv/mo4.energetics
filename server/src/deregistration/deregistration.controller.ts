@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
@@ -40,5 +41,10 @@ export class DeregistrationController {
     @UploadedFiles() files: Array<Express.Multer.File>,
   ) {
     return this.deregistrationService.updateDeregistration(id, dto, files);
+  }
+
+  @Delete('/:id')
+  deleteDeregistration(@Param('id') id: number) {
+    return this.deregistrationService.deleteDeregistration(id);
   }
 }
