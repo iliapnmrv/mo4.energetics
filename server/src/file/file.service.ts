@@ -26,8 +26,12 @@ export class FileService {
     }
   }
   deleteFile(dto: DeleteFileDto): void {
+    console.log(dto);
+
     for (const filePath of dto.files) {
       const file = path.resolve(__dirname, '..', 'static', filePath);
+      console.log(file);
+
       if (fs.existsSync(file)) {
         fs.unlinkSync(file);
       }

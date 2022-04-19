@@ -1,9 +1,11 @@
 import React from "react";
 import { Box, Button } from "@mui/material";
-//@ts-ignore
-import FileViewer from "react-file-viewer";
 import { IFile } from "types/item";
 import Link from "next/link";
+//@ts-ignore
+import FileViewer from "react-file-viewer";
+import { API_URL } from "http/index";
+import DocViewer, { DocViewerRenderers } from "react-doc-viewer";
 
 type Props = {
   attachment: IFile;
@@ -11,27 +13,37 @@ type Props = {
 };
 
 const FileView = ({ attachment, deregistrationId }: Props) => {
+  const docs = [{ uri: `${API_URL}${attachment.path}` }];
+  console.log(`${API_URL}${attachment.path}`);
+
   return (
     <>
       {console.log(attachment)}
       <Box
         sx={{ display: "flex", justifyContent: "space-between", mb: "20px" }}
       >
-        <a
-          href={`http://localhost:8001/${attachment.path}`}
-          download={attachment.name}
-        >
+        <a href={`${API_URL}${attachment.path}`} download={attachment.name}>
           <Button variant="contained" sx={{ marginRight: "10px" }}>
             Скачать
           </Button>
         </a>
 
         <Box overflow={"auto"} maxHeight={300} width={"100%"}>
-          <FileViewer
-            fileType={attachment.path?.split(".").pop()}
-            filePath={`http://localhost:8001/${attachment.path}`}
-            onError={(e: React.ChangeEvent<HTMLInputElement>) => console.log(e)}
-          />
+          {attachment.path?.split(".").pop() === "docx" ? (
+            <FileViewer
+              fileType={attachment.path?.split(".").pop()}
+              filePath={`${API_URL}${attachment.path}`}
+              onError={(e: React.ChangeEvent<HTMLInputElement>) =>
+                console.log(e)
+              }
+            />
+          ) : (
+            <DocViewer
+              pluginRenderers={DocViewerRenderers}
+              documents={docs}
+              config={{ header: { disableFileName: true } }}
+            />
+          )}
         </Box>
       </Box>
     </>

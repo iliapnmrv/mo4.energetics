@@ -68,10 +68,12 @@ export class Deregistration extends Model<
         ? JSON.parse(this.getDataValue('attachments'))
         : null;
     },
-    set(val: Array<string>) {
+    set(val: Array<IFile>) {
+      console.log('val', val);
+
       return this.setDataValue('attachments', JSON.stringify(val));
     },
-    type: DataType.STRING,
+    type: DataType.TEXT('long'),
   })
   attachments: IFile[];
 

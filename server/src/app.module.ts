@@ -26,11 +26,14 @@ import { Log } from './logs/models/logs.model';
   imports: [
     ServeStaticModule.forRoot({
       rootPath: path.resolve(__dirname, '..', 'static'),
+      exclude: ['/api*'],
+      serveRoot: '/api/',
     }),
     ItemModule,
     RepairsModule,
     ConfigModule.forRoot({
-      envFilePath: '.env',
+      envFilePath: `.${process.env.NODE_ENV}.env`,
+      isGlobal: true,
     }),
     SequelizeModule.forRoot({
       dialect: 'mysql',

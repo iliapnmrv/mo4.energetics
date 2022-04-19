@@ -51,14 +51,17 @@ export class DeregistrationService {
     const attachments: Array<IFile | string> = [];
 
     console.log(id, dto, files);
-    console.log(typeof dto.attachments);
 
     if (typeof dto.attachments === 'object') {
       for (let i = 0; i < dto.attachments.length; i++) {
         attachments.push(JSON.parse(dto.attachments[i]));
       }
     } else {
-      if (typeof dto.attachments !== 'string') {
+      if (
+        typeof dto.attachments !== 'undefined' &&
+        typeof dto.attachments === 'string' &&
+        dto.attachments.length > 10
+      ) {
         attachments.push(JSON.parse(dto.attachments));
       }
     }
@@ -73,6 +76,9 @@ export class DeregistrationService {
           name: attachment.originalname,
         });
       }
+    }
+    if (!('attachments' in dto)) {
+      dto.attachments = [];
     }
     console.log(attachments);
 
