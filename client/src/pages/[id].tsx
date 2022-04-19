@@ -28,7 +28,7 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
 import _ from "lodash";
-import { LOGS_CATALOG } from "constants/constants";
+import { ILogsCatalog, LOGS_CATALOG } from "constants/constants";
 import moment from "moment";
 import DeleteButton from "components/Buttons/Delete";
 import FileViewCaller from "components/FileView/FileViewDynamic";
@@ -97,27 +97,40 @@ export default function Qr({ data }: Props) {
 
   const saveData = async (values: IItem) => {
     let action: string = "";
+
+    type changedValues = keyof typeof LOGS_CATALOG;
+
     const logValues = changedKeys(initialState, values).map(
-      (changed: string) => {
+      (changed: changedValues | string) => {
         if (catalogsNames[changed]) {
+          //@ts-ignore
           return (action += `${LOGS_CATALOG[changed]}: ${
+            //@ts-ignore
             catalogsNames[changed][initialState[changed] - 1][
               changed.slice(0, -3) + "Name"
             ]
           } -> ${
+            //@ts-ignore
             catalogsNames[changed][values[changed] - 1][
               changed.slice(0, -3) + "Name"
             ]
           }; `);
         }
+        //@ts-ignore
         action += `${LOGS_CATALOG[changed]}: ${
+          //@ts-ignore
           new Date(initialState[changed]) > 0
-            ? new Date(initialState[changed]).toLocaleDateString()
-            : initialState[changed]
+            ? //@ts-ignore
+              new Date(initialState[changed]).toLocaleDateString()
+            : //@ts-ignore
+              initialState[changed]
         } -> ${
+          //@ts-ignore
           new Date(initialState[changed]) > 0
-            ? new Date(values[changed]).toLocaleDateString()
-            : values[changed]
+            ? //@ts-ignore
+              new Date(values[changed]).toLocaleDateString()
+            : //@ts-ignore
+              values[changed]
         }; `;
       }
     );

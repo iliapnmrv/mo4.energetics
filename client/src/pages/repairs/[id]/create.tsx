@@ -29,7 +29,7 @@ const Create = (props: Props) => {
 
   const { repairTypes } = useAppSelector((state) => state.catalogsReducer);
 
-  const saveRepair = async (values) => {
+  const saveRepair = async (values: any) => {
     const response = await $api.post(`repairs/${router.query.id}`, values);
     router.push(`/${router.query.id}`);
   };

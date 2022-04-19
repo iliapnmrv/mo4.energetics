@@ -57,7 +57,7 @@ const EditRepair = ({ repair }: Props) => {
 
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState<boolean>(false);
 
-  const saveRepair = async (values) => {
+  const saveRepair = async (values: any) => {
     const response = await $api.put(`repairs/${router.query.id}`, values);
     router.push(`/${inventorynumber}`);
   };

@@ -31,7 +31,7 @@ export async function getServerSideProps({ query }: any) {
 
 export default function Qr({ inventorynumber }: Props) {
   const router = useRouter();
-  const saveData = async (values: IItem) => {
+  const saveData = async (values: any) => {
     const response = await $api.post(`items`, values);
     router.push("/");
   };
