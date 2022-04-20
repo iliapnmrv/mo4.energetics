@@ -14,11 +14,9 @@ type Props = {
 
 const FileView = ({ attachment, deregistrationId }: Props) => {
   const docs = [{ uri: `${API_URL}${attachment.path}` }];
-  console.log(`${API_URL}${attachment.path}`);
 
   return (
     <>
-      {console.log(attachment)}
       <Box
         sx={{ display: "flex", justifyContent: "space-between", mb: "20px" }}
       >
