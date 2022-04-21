@@ -21,6 +21,7 @@ import * as path from 'path';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { LogsModule } from './logs/logs.module';
 import { Log } from './logs/models/logs.model';
+console.log(`.${process.env.NODE_ENV}.env`);
 
 @Module({
   imports: [
