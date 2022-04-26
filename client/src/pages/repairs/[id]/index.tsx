@@ -246,9 +246,9 @@ const EditRepair = ({ repair }: Props) => {
                 </Grid>
                 <Grid item xs={8}>
                   <Field
-                    label="Примечания"
+                    label="Запасные части"
                     name="comments"
-                    placeholder="Примечания"
+                    placeholder="Запасные части"
                     style={{
                       width: "100%",
                     }}

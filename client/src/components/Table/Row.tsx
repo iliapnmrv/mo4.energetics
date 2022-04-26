@@ -58,8 +58,8 @@ export default function Row({ row }: Props) {
             <a>{row.inventorynumber}</a>
           </Link>
         </TableCell>
+        <TableCell align="right">{row?.Type?.typeName}</TableCell>
         <TableCell scope="row">{row.name}</TableCell>
-        <TableCell align="right">{row?.Place?.placeName}</TableCell>
         <TableCell align="right">{row?.Person?.personName}</TableCell>
         <TableCell align="right" colSpan={isRepairs ? 2 : 1}>
           {isRepairs ? (
@@ -81,18 +81,11 @@ export default function Row({ row }: Props) {
           )}
         </TableCell>
         <TableCell align="right">
-          <Box style={{ display: "flex", justifyContent: "space-around" }}>
-            <Link href={`${row.inventorynumber}`}>
-              <a>
-                <EditOutlinedIcon />
-              </a>
-            </Link>
-            <Link href={`/repairs/${row.inventorynumber}/create`}>
-              <a>
-                <BuildOutlinedIcon />
-              </a>
-            </Link>
-          </Box>
+          <Link href={`${row.inventorynumber}`}>
+            <a>
+              <EditOutlinedIcon />
+            </a>
+          </Link>
         </TableCell>
       </TableRow>
       <TableRow>
@@ -112,10 +105,10 @@ export default function Row({ row }: Props) {
                 <Card variant="outlined" sx={{ border: "0px" }}>
                   <CardContent sx={{ padding: "2px" }}>
                     <Typography color="text.secondary" sx={{ fontSize: 14 }}>
-                      Номенкулатура устройства
+                      Местоположение устройства
                     </Typography>
                     <Typography variant="body2">
-                      {row?.Type?.typeName}
+                      {row?.Place?.placeName}
                     </Typography>
                   </CardContent>
                 </Card>

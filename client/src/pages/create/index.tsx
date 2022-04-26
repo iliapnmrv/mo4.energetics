@@ -1,9 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import $api from "http/index";
 import { IItem } from "pages";
 import { Field, Form, Formik, FormikProps } from "formik";
 import { TextField, Select } from "formik-mui";
 import {
+  Autocomplete,
   Box,
   Button,
   FormControl,
@@ -18,18 +19,27 @@ import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
 
 type Props = {
   inventorynumber: number;
+  names: string[];
 };
 
 export async function getServerSideProps({ query }: any) {
+  const { data: names } = await $api.get<IItem[]>(`items`);
   const { inventorynumber } = query;
+
   return {
     props: {
-      inventorynumber, //pass it to the page props
+      inventorynumber: inventorynumber || null, //pass it to the page props
+      names: names
+        .map(({ name }) => name)
+        .filter((value, index, array) => array.indexOf(value) === index)
+        .sort(),
     },
   };
 }
 
-export default function Qr({ inventorynumber }: Props) {
+export default function Qr({ inventorynumber, names }: Props) {
+  console.log(names);
+
   const router = useRouter();
   const saveData = async (values: any) => {
     const response = await $api.post(`items`, values);
@@ -39,7 +49,6 @@ export default function Qr({ inventorynumber }: Props) {
   const { persons, places, statuses, types, repairTypes } = useAppSelector(
     (state) => state.catalogsReducer
   );
-
   return (
     <ItemLayout>
       <Formik
@@ -55,12 +64,11 @@ export default function Qr({ inventorynumber }: Props) {
           dateofdelivery: null,
           guaranteeperiod: null,
         }}
-        onSubmit={(values, actions) => {
-          console.log(values);
+        onSubmit={(values) => {
           saveData(values);
         }}
       >
-        {({ values, setFieldValue }) => (
+        {({ values, setFieldValue, handleChange }) => (
           <Box sx={{ flexGrow: 1, padding: "30px", paddingTop: "20px" }}>
             <Form>
               <Grid container spacing={2}>
@@ -73,7 +81,6 @@ export default function Qr({ inventorynumber }: Props) {
                     style={{
                       width: "100%",
                     }}
-                    // disabled
                     component={TextField}
                   />
                 </Grid>
@@ -91,16 +98,23 @@ export default function Qr({ inventorynumber }: Props) {
                   />
                 </Grid>
                 <Grid item xs={4}>
-                  <Field
-                    style={{
-                      width: "100%",
+                  <Autocomplete
+                    id="name"
+                    options={names}
+                    getOptionLabel={(option) => option}
+                    style={{ width: "100%" }}
+                    onChange={(event, value) => {
+                      setFieldValue("name", value);
                     }}
-                    label="Наименование"
-                    type="text"
-                    name="name"
-                    placeholder="Наименование"
-                    component={TextField}
-                    value={values.name}
+                    renderInput={(params) => (
+                      <TextFieldInput
+                        {...params}
+                        onChange={handleChange}
+                        label="Наименование"
+                        fullWidth
+                        value={values?.name}
+                      />
+                    )}
                   />
                 </Grid>
                 <Grid item xs={8}>

@@ -106,12 +106,12 @@ export default function Qr({ data }: Props) {
           //@ts-ignore
           return (action += `${LOGS_CATALOG[changed]}: ${
             //@ts-ignore
-            catalogsNames[changed][initialState[changed] - 1][
+            catalogsNames[changed][initialState[changed] - 1]?.[
               changed.slice(0, -3) + "Name"
             ]
           } -> ${
             //@ts-ignore
-            catalogsNames[changed][values[changed] - 1][
+            catalogsNames[changed][values[changed] - 1]?.[
               changed.slice(0, -3) + "Name"
             ]
           }; `);

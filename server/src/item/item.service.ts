@@ -37,7 +37,10 @@ export class ItemService {
         { model: Log, as: 'Log' },
         { model: Repair, as: 'Repairs' },
       ],
-      order: [[{ model: Log, as: 'Log' }, 'createdAt', 'ASC']],
+      order: [
+        ['inventorynumber', 'ASC'],
+        [{ model: Log, as: 'Log' }, 'createdAt', 'ASC'],
+      ],
     });
   }
 
@@ -111,7 +114,10 @@ export class ItemService {
         ],
       },
 
-      order: [[{ model: Log, as: 'Log' }, 'createdAt', 'ASC']],
+      order: [
+        ['inventorynumber', 'ASC'],
+        [{ model: Log, as: 'Log' }, 'createdAt', 'ASC'],
+      ],
     });
   }
 

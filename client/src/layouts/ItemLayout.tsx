@@ -13,9 +13,9 @@ const ItemLayout = ({ children }: Props) => {
   return (
     <div className={styles.flex}>
       <Box width={"100px"}>
-        <Link href="/">
+        <Link href="/" passHref>
           <a>
-            <Button onClick={() => router.back()}>
+            <Button>
               <HomeOutlinedIcon />
             </Button>
           </a>

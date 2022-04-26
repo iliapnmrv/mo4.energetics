@@ -89,13 +89,31 @@ const RepairsComponent = ({ inventorynumber, Repairs }: Props) => {
         sx={{
           padding: "10px 0px",
           display: "flex",
+          alignItems: "center",
           justifyContent: "space-between",
         }}
       >
         Ремонты
-        <Link href={`/repairs/${inventorynumber}/create`} passHref>
-          <Button variant="outlined">Добавить ремонт</Button>
-        </Link>
+        {console.log(Repairs?.reduce((sum, { price }) => (sum += price), 0))}
+        <Box
+          sx={{
+            fontSize: "15px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          {Repairs?.reduce((sum, { price }) => (sum += price), 0) ? (
+            <p style={{ marginRight: "10px" }}>
+              Общая сумма{" "}
+              {Repairs?.reduce((sum, { price }) => (sum += price), 0)}
+            </p>
+          ) : null}
+
+          <Link href={`/repairs/${inventorynumber}/create`} passHref>
+            <Button variant="outlined">Добавить ремонт</Button>
+          </Link>
+        </Box>
       </Typography>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -213,7 +231,7 @@ const RepairsComponent = ({ inventorynumber, Repairs }: Props) => {
                                 color="text.secondary"
                                 sx={{ fontSize: 14 }}
                               >
-                                Примечания
+                                Запасные части
                               </Typography>
                               <Typography variant="body2">
                                 {repair.comments}

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Paper from "@mui/material/Paper";
 import { Box } from "@mui/system";
-import { Fab, Typography } from "@mui/material";
+import { Button, Fab, Typography } from "@mui/material";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -32,7 +32,7 @@ import {
 } from "store/slices/catalogsSlice";
 import Link from "next/link";
 import Filters from "components/Filters/Filters";
-import Search from "components/Search/Search";
+import Download from "components/Buttons/Download";
 
 export type IItem = {
   inventorynumber: string;
@@ -113,6 +113,7 @@ const Home: React.FC<Props> = ({
     <>
       <Box sx={{ position: "relative" }}>
         <Filters setItems={setItems} />
+
         {items.length ? (
           <TableContainer
             component={Paper}
@@ -123,9 +124,11 @@ const Home: React.FC<Props> = ({
                 <TableRow>
                   <TableCell />
                   <TableCell width={"10%"}>Инвентарный номер</TableCell>
-                  <TableCell>Название</TableCell>
-                  <TableCell>Местоположение</TableCell>
-                  <TableCell align="right">МОЛ</TableCell>
+                  <TableCell>Номенклатура</TableCell>
+                  <TableCell>Характеристика</TableCell>
+                  <TableCell align="right" width={"15%"}>
+                    МОЛ
+                  </TableCell>
                   <TableCell
                     align="center"
                     colSpan={isRepairs ? 2 : 1}
@@ -133,7 +136,7 @@ const Home: React.FC<Props> = ({
                   >
                     {isRepairs ? "Ремонты" : "Статус"}
                   </TableCell>
-                  <TableCell align="right">Действия</TableCell>
+                  <TableCell align="right">Изменить</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -155,6 +158,19 @@ const Home: React.FC<Props> = ({
             По вашему запросу не было найдено элементов
           </Typography>
         )}
+      </Box>
+      <Box
+        sx={{
+          position: "fixed",
+          bottom: "30px",
+          rigth: "0px",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <Download items={items} />
+
         <Link
           href={{
             pathname: "/create",
