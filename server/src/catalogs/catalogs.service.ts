@@ -10,31 +10,41 @@ import { RepairsType } from 'src/repairs/models/types.model';
 @Injectable()
 export class CatalogsService {
   constructor(
-    @InjectModel(Status) private statusRepository: typeof Status,
-    @InjectModel(Person) private personRepository: typeof Person,
-    @InjectModel(Place) private placeRepository: typeof Place,
-    @InjectModel(Type) private typeRepository: typeof Type,
-    @InjectModel(RepairsType) private repairTypeRepository: typeof RepairsType,
+    @InjectModel(Status) private statusesRepository: typeof Status,
+    @InjectModel(Person) private personsRepository: typeof Person,
+    @InjectModel(Place) private placesRepository: typeof Place,
+    @InjectModel(Type) private typesRepository: typeof Type,
+    @InjectModel(RepairsType)
+    private repairsTypesRepository: typeof RepairsType,
     @InjectModel(RepairsDecision)
-    private repairDecisionRepository: typeof RepairsDecision,
+    private repairsDecisionsRepository: typeof RepairsDecision,
   ) {}
 
-  async getPersons(): Promise<any> {
-    return await this.personRepository.findAll();
+  catalogNames = {
+    persons: 'person',
+    places: 'place',
+    types: 'person',
+    statuses: 'status',
+    repairsTypes: 'type',
+    repairsDecisions: 'decision',
+  };
+
+  async getCatalog(catalog: string): Promise<any> {
+    return await this[`${catalog}Repository`].findAll();
   }
-  async getStatuses(): Promise<any> {
-    return await this.statusRepository.findAll();
+  async createCatalogItem(catalog: string, dto: any): Promise<any> {
+    const item = await this[`${catalog}Repository`].create({ ...dto });
+    return item;
   }
-  async getPlaces(): Promise<any> {
-    return await this.placeRepository.findAll();
+  async updateCatalogItem(catalog: string, id: string, dto: any): Promise<any> {
+    return await this[`${catalog}Repository`].update(
+      { ...dto },
+      { where: { [`${this.catalogNames[catalog]}Id`]: id } },
+    );
   }
-  async getTypes(): Promise<any> {
-    return await this.typeRepository.findAll();
-  }
-  async getRepairsTypes(): Promise<any> {
-    return await this.repairTypeRepository.findAll();
-  }
-  async getRepairsDecisions(): Promise<any> {
-    return await this.repairDecisionRepository.findAll();
+  async deleteCatalogItem(catalog: string, id: string): Promise<any> {
+    return await this[`${catalog}Repository`].destroy({
+      where: { [`${this.catalogNames[catalog]}Id`]: id },
+    });
   }
 }

@@ -148,8 +148,6 @@ export class ItemService {
 
   async updateItem(id: number, dto: UpdateItemDto): Promise<Item> {
     for (const key in dto) {
-      console.log({ [key]: dto[key] });
-
       await this.itemsRepository.update(
         { [key]: dto[key] },
         { where: { inventorynumber: id } },

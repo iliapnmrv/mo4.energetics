@@ -11,6 +11,33 @@ export const LOGS_CATALOG = {
   description: "Дополнительная информация",
 };
 
+export const CatalogsNames = {
+  statuses: {
+    id: "statusId",
+    name: "statusName",
+  },
+  places: {
+    id: "placeId",
+    name: "placeName",
+  },
+  types: {
+    id: "typeId",
+    name: "typeName",
+  },
+  persons: {
+    id: "personId",
+    name: "personName",
+  },
+  repairsTypes: {
+    id: "typeId",
+    name: "typeName",
+  },
+  repairsDecisions: {
+    id: "decisionId",
+    name: "decisionName",
+  },
+};
+
 export interface ILogsCatalog {
   inventorynumber: string;
   supplier: string;

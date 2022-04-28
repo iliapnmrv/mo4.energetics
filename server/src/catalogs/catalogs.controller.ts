@@ -1,32 +1,36 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+} from '@nestjs/common';
 import { CatalogsService } from './catalogs.service';
 
 @Controller('catalogs')
 export class CatalogsController {
   constructor(private service: CatalogsService) {}
 
-  @Get('/persons')
-  getPersons() {
-    return this.service.getPersons();
+  @Get('/:catalog')
+  getCatalogs(@Param('catalog') catalog: string) {
+    return this.service.getCatalog(catalog);
   }
-  @Get('/places')
-  getPlaces() {
-    return this.service.getPlaces();
+  @Post('/:catalog')
+  createCatalog(@Param('catalog') catalog: string, @Body() catalogDto: any) {
+    return this.service.createCatalogItem(catalog, catalogDto);
   }
-  @Get('/statuses')
-  getStatuses() {
-    return this.service.getStatuses();
+  @Put('/:catalog/:id')
+  updateCatalog(
+    @Param('catalog') catalog: string,
+    @Param('id') id: string,
+    @Body() catalogDto: any,
+  ) {
+    return this.service.updateCatalogItem(catalog, id, catalogDto);
   }
-  @Get('/types')
-  getTypes() {
-    return this.service.getTypes();
-  }
-  @Get('/repairsTypes')
-  getRepairsTypes() {
-    return this.service.getRepairsTypes();
-  }
-  @Get('/repairsDecisions')
-  getRepairsDecisions() {
-    return this.service.getRepairsDecisions();
+  @Delete('/:catalog/:id')
+  deleteCatalog(@Param('catalog') catalog: string, @Param('id') id: string) {
+    return this.service.deleteCatalogItem(catalog, id);
   }
 }
