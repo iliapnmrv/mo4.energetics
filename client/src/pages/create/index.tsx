@@ -98,6 +98,26 @@ export default function Qr({ inventorynumber, names }: Props) {
                   />
                 </Grid>
                 <Grid item xs={4}>
+                  <FormControl fullWidth>
+                    <Field
+                      width={100}
+                      as="select"
+                      defaultValue=""
+                      name="type_id"
+                      label="Номенкулатура устройства"
+                      component={Select}
+                    >
+                      {types.map((type) => {
+                        return (
+                          <MenuItem value={type.typeId} key={type.id}>
+                            {type.typeName}
+                          </MenuItem>
+                        );
+                      })}
+                    </Field>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={8}>
                   <Autocomplete
                     id="name"
                     options={names}
@@ -117,19 +137,7 @@ export default function Qr({ inventorynumber, names }: Props) {
                     )}
                   />
                 </Grid>
-                <Grid item xs={8}>
-                  <Field
-                    style={{
-                      width: "100%",
-                    }}
-                    label="Дополнительная информация"
-                    type="text"
-                    name="description"
-                    placeholder="Дополнительная информация"
-                    component={TextField}
-                    value={values.description}
-                  />
-                </Grid>
+
                 <Grid item xs={4}>
                   <FormControl fullWidth>
                     <Field
@@ -204,25 +212,18 @@ export default function Qr({ inventorynumber, names }: Props) {
                     </Field>
                   </FormControl>
                 </Grid>
-                <Grid item xs={4}>
-                  <FormControl fullWidth>
-                    <Field
-                      width={100}
-                      as="select"
-                      defaultValue=""
-                      name="type_id"
-                      label="Номенкулатура устройства"
-                      component={Select}
-                    >
-                      {types.map((type) => {
-                        return (
-                          <MenuItem value={type.typeId} key={type.id}>
-                            {type.typeName}
-                          </MenuItem>
-                        );
-                      })}
-                    </Field>
-                  </FormControl>
+                <Grid item xs={8}>
+                  <Field
+                    style={{
+                      width: "100%",
+                    }}
+                    label="Дополнительная информация"
+                    type="text"
+                    name="description"
+                    placeholder="Дополнительная информация"
+                    component={TextField}
+                    value={values.description}
+                  />
                 </Grid>
                 <Grid item xs={4}>
                   <FormControl fullWidth>
