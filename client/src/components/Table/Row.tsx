@@ -81,7 +81,7 @@ export default function Row({ row }: Props) {
           )}
         </TableCell>
         <TableCell align="right">
-          <Link href={`${row.inventorynumber}`}>
+          <Link href={`/${row.inventorynumber}`}>
             <a>
               <EditOutlinedIcon />
             </a>
@@ -157,7 +157,7 @@ export default function Row({ row }: Props) {
               alignItems="center"
               width={"100%"}
             >
-              <Link href={`${row.inventorynumber}`}>
+              <Link href={`/${row.inventorynumber}`}>
                 <a>
                   <Button size="large" type="submit">
                     Редактировать
