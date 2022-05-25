@@ -100,6 +100,9 @@ export class ItemService {
                 name: search ? { [Op.like]: `%${search}%` } : { [Op.ne]: null },
               },
               {
+                inventorynumber: search ? { [Op.like]: `%${search}%` } : { [Op.ne]: null },
+              },
+              {
                 supplier: search
                   ? { [Op.like]: `%${search}%` }
                   : { [Op.ne]: null },
