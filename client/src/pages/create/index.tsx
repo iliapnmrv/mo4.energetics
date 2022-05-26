@@ -16,11 +16,19 @@ import ItemLayout from "layouts/ItemLayout";
 import { useAppDispatch, useAppSelector } from "hooks/redux";
 import { useRouter } from "next/router";
 import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
+import * as Yup from "yup";
 
 type Props = {
   inventorynumber: number;
   names: string[];
 };
+
+const CreateItemSchema = Yup.object().shape({
+  person_id: Yup.string().required("Обязательное поле"),
+  status_id: Yup.string().required("Обязательное поле"),
+  type_id: Yup.string().required("Обязательное поле"),
+  place_id: Yup.string().required("Обязательное поле"),
+});
 
 export async function getServerSideProps({ query }: any) {
   const { data: names } = await $api.get<IItem[]>(`items`);
@@ -56,19 +64,20 @@ export default function Qr({ inventorynumber, names }: Props) {
           inventorynumber,
           supplier: "",
           name: "",
-          person_id: 0,
-          status_id: 0,
-          type_id: 0,
-          place_id: 0,
+          person_id: "",
+          status_id: "",
+          type_id: "",
+          place_id: "",
           description: "",
           dateofdelivery: null,
           guaranteeperiod: null,
         }}
+        validationSchema={CreateItemSchema}
         onSubmit={(values) => {
           saveData(values);
         }}
       >
-        {({ values, setFieldValue, handleChange }) => (
+        {({ values, setFieldValue, handleChange, isValid, dirty }) => (
           <Box sx={{ flexGrow: 1, padding: "30px", paddingTop: "20px" }}>
             <Form>
               <Grid container spacing={2}>
@@ -82,6 +91,7 @@ export default function Qr({ inventorynumber, names }: Props) {
                       width: "100%",
                     }}
                     component={TextField}
+                    required
                   />
                 </Grid>
                 <Grid item xs={4}>
@@ -95,6 +105,7 @@ export default function Qr({ inventorynumber, names }: Props) {
                     placeholder="Поставщик"
                     component={TextField}
                     value={values.supplier}
+                    required
                   />
                 </Grid>
                 <Grid item xs={4}>
@@ -133,6 +144,7 @@ export default function Qr({ inventorynumber, names }: Props) {
                         label="Наименование"
                         fullWidth
                         value={values?.name}
+                        required
                       />
                     )}
                   />
@@ -170,6 +182,7 @@ export default function Qr({ inventorynumber, names }: Props) {
                         {...params}
                         fullWidth
                         autoComplete="off"
+                        required
                       />
                     )}
                   />
@@ -177,7 +190,6 @@ export default function Qr({ inventorynumber, names }: Props) {
                 <Grid item xs={4}>
                   <DesktopDatePicker
                     label="Гарантийный срок"
-                    // clearable
                     inputFormat="DD/MM/yyyy"
                     value={values.guaranteeperiod}
                     onChange={(value) =>
@@ -187,6 +199,7 @@ export default function Qr({ inventorynumber, names }: Props) {
                       <TextFieldInput
                         {...params}
                         fullWidth
+                        required
                         autoComplete="off"
                       />
                     )}
@@ -246,7 +259,11 @@ export default function Qr({ inventorynumber, names }: Props) {
                   </FormControl>
                 </Grid>
 
-                <Button size="large" type="submit">
+                <Button
+                  size="large"
+                  type="submit"
+                  disabled={!(isValid && dirty)}
+                >
                   Сохранить
                 </Button>
               </Grid>

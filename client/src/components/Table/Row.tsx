@@ -54,7 +54,7 @@ export default function Row({ row }: Props) {
           </IconButton>
         </TableCell>
         <TableCell>
-          <Link href={`${row.inventorynumber}`}>
+          <Link href={`/${row.inventorynumber}`}>
             <a>{row.inventorynumber}</a>
           </Link>
         </TableCell>
