@@ -1,0 +1,13 @@
+.button {
+    background-color: #f9f9f9;
+    height: 100vh;
+    cursor: pointer;
+    position: sticky !important;
+    top: 0;
+}
+
+.flex {
+    display: flex;
+    flex-direction: row;
+    position: relative;
+}
