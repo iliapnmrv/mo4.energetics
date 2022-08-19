@@ -50,7 +50,7 @@ const RepairsComponent = ({ inventorynumber, Repairs }: Props) => {
   const router = useRouter();
 
   const deleteItem = async () => {
-    const response = await $api.delete(`repairs/${router.query.id}`);
+    const response = await $api.delete(`repairs/${requestnumber}`);
     setIsDeleteDialogOpen(false);
     router.push(`/${inventorynumber}`);
   };
@@ -147,7 +147,7 @@ const RepairsComponent = ({ inventorynumber, Repairs }: Props) => {
                     </IconButton>
                   </TableCell>
                   <TableCell>
-                    <Link href={`${repair.requestnumber}`}>
+                    <Link href={`/repairs/${repair.requestnumber}`}>
                       <a>{repair.requestnumber}</a>
                     </Link>
                   </TableCell>
