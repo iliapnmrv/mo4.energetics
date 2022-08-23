@@ -126,7 +126,7 @@ export default function Row({ row }: Props) {
                       Дата поставки
                     </Typography>
                     <Typography variant="body2">
-                      {row.dateofdelivery}
+                      {row.registrationdate}
                     </Typography>
                   </CardContent>
                 </Card>

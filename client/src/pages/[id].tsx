@@ -49,6 +49,7 @@ type Props = {
 export default function Qr({ data }: Props) {
   const {
     inventorynumber,
+    commissioningdate,
     Log,
     supplier,
     name,
@@ -58,7 +59,7 @@ export default function Qr({ data }: Props) {
     place_id,
     description,
     Repairs,
-    dateofdelivery,
+    registrationdate,
     guaranteeperiod,
     Deregistration,
   } = data;
@@ -72,8 +73,9 @@ export default function Qr({ data }: Props) {
     type_id,
     place_id,
     description,
-    dateofdelivery,
+    registrationdate,
     guaranteeperiod,
+    commissioningdate,
   };
 
   const router = useRouter();
@@ -152,7 +154,8 @@ export default function Qr({ data }: Props) {
           type_id,
           place_id,
           description,
-          dateofdelivery,
+          registrationdate,
+          commissioningdate,
           guaranteeperiod,
         }}
         onSubmit={(values) => {
@@ -261,10 +264,47 @@ export default function Qr({ data }: Props) {
                 </Grid>
                 <Grid item xs={4}>
                   <DesktopDatePicker
-                    label="Дата поставки"
+                    label="Дата постановки на учет"
                     inputFormat="DD/MM/yyyy"
-                    value={values.dateofdelivery}
-                    onChange={(value) => setFieldValue("dateofdelivery", value)}
+                    value={values.registrationdate}
+                    onChange={(value) =>
+                      setFieldValue("registrationdate", value)
+                    }
+                    renderInput={(params) => (
+                      <TextFieldInput
+                        {...params}
+                        fullWidth
+                        autoComplete="off"
+                      />
+                    )}
+                  />
+                </Grid>
+                <Grid item xs={4}>
+                  <DesktopDatePicker
+                    label="Дата передачи в эксплуатацию"
+                    inputFormat="DD/MM/yyyy"
+                    value={values.commissioningdate}
+                    onChange={(value) =>
+                      setFieldValue("commissioningdate", value)
+                    }
+                    renderInput={(params) => (
+                      <TextFieldInput
+                        {...params}
+                        fullWidth
+                        autoComplete="off"
+                      />
+                    )}
+                  />
+                </Grid>
+                <Grid item xs={4}>
+                  <DesktopDatePicker
+                    label="Гарантийный срок"
+                    // clearable
+                    inputFormat="DD/MM/yyyy"
+                    value={values.guaranteeperiod}
+                    onChange={(value) =>
+                      setFieldValue("guaranteeperiod", value)
+                    }
                     renderInput={(params) => (
                       <TextFieldInput
                         {...params}
@@ -296,24 +336,6 @@ export default function Qr({ data }: Props) {
                 </Grid>
 
                 <Grid item xs={4}>
-                  <DesktopDatePicker
-                    label="Гарантийный срок"
-                    // clearable
-                    inputFormat="DD/MM/yyyy"
-                    value={values.guaranteeperiod}
-                    onChange={(value) =>
-                      setFieldValue("guaranteeperiod", value)
-                    }
-                    renderInput={(params) => (
-                      <TextFieldInput
-                        {...params}
-                        fullWidth
-                        autoComplete="off"
-                      />
-                    )}
-                  />
-                </Grid>
-                <Grid item xs={8}>
                   <FormControl fullWidth>
                     <Field
                       width={100}

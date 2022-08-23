@@ -88,8 +88,8 @@ const Filters = ({ setItems }: Props) => {
                 place_id: [],
                 guaranteeperiodFrom: null,
                 guaranteeperiodTo: null,
-                dateofdeliveryFrom: null,
-                dateofdeliveryTo: null,
+                registrationdateFrom: null,
+                registrationdateTo: null,
               }}
               onSubmit={(values) => {
                 filterItems(values);
@@ -187,9 +187,9 @@ const Filters = ({ setItems }: Props) => {
                         <DesktopDatePicker
                           label="Дата поставки от"
                           inputFormat="DD/MM/yyyy"
-                          value={values.dateofdeliveryFrom}
+                          value={values.registrationdateFrom}
                           onChange={(value) =>
-                            setFieldValue("dateofdeliveryFrom", value)
+                            setFieldValue("registrationdateFrom", value)
                           }
                           renderInput={(params) => (
                             <TextFieldInput
@@ -203,9 +203,9 @@ const Filters = ({ setItems }: Props) => {
                         <DesktopDatePicker
                           label="Дата поставки до"
                           inputFormat="DD/MM/yyyy"
-                          value={values.dateofdeliveryTo}
+                          value={values.registrationdateTo}
                           onChange={(value) =>
-                            setFieldValue("dateofdeliveryTo", value)
+                            setFieldValue("registrationdateTo", value)
                           }
                           renderInput={(params) => (
                             <TextFieldInput

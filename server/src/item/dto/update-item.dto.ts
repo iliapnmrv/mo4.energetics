@@ -1,6 +1,6 @@
 export type UpdateItemDto = {
   name?: string;
-  dateofdelivery?: Date;
+  registrationdate?: Date;
   guaranteeperiod?: Date;
   supplier?: string;
   placeId?: number;

@@ -19,7 +19,8 @@ import { Type } from './types.model';
 interface ItemCreationAttrs {
   name: string;
   inventorynumber: number;
-  dateofdelivery: Date;
+  registrationdate: Date;
+  commissioningdate: Date;
   guaranteeperiod: Date;
   supplier: string;
   type_id: number;
@@ -71,7 +72,12 @@ export class Item extends Model implements ItemCreationAttrs {
   @Column({
     type: DataType.DATEONLY,
   })
-  dateofdelivery: Date;
+  registrationdate: Date;
+
+  @Column({
+    type: DataType.DATEONLY,
+  })
+  commissioningdate: Date;
 
   @Column({
     type: DataType.DATEONLY,

@@ -2,7 +2,7 @@ export const LOGS_CATALOG = {
   inventorynumber: "Инвентарный номер",
   supplier: "Поставщик",
   name: "Наименование",
-  dateofdelivery: "Дата доставки",
+  registrationdate: "Дата доставки",
   guaranteeperiod: "Гарантивный срок",
   person_id: "МОЛ",
   status_id: "Статус",
@@ -42,7 +42,7 @@ export interface ILogsCatalog {
   inventorynumber: string;
   supplier: string;
   name: string;
-  dateofdelivery: string;
+  registrationdate: string;
   guaranteeperiod: string;
   person_id: string;
   status_id: string;

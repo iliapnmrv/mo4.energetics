@@ -69,7 +69,8 @@ export default function Qr({ inventorynumber, names }: Props) {
           type_id: "",
           place_id: "",
           description: "",
-          dateofdelivery: null,
+          registrationdate: null,
+          commissioningdate: null,
           guaranteeperiod: null,
         }}
         validationSchema={CreateItemSchema}
@@ -172,11 +173,32 @@ export default function Qr({ inventorynumber, names }: Props) {
                 </Grid>
                 <Grid item xs={4}>
                   <DesktopDatePicker
-                    label="Дата поставки"
+                    label="Дата постановки на учет"
                     // clearable
                     inputFormat="DD/MM/yyyy"
-                    value={values.dateofdelivery}
-                    onChange={(value) => setFieldValue("dateofdelivery", value)}
+                    value={values.registrationdate}
+                    onChange={(value) =>
+                      setFieldValue("registrationdate", value)
+                    }
+                    renderInput={(params) => (
+                      <TextFieldInput
+                        {...params}
+                        fullWidth
+                        autoComplete="off"
+                        required
+                      />
+                    )}
+                  />
+                </Grid>
+                <Grid item xs={4}>
+                  <DesktopDatePicker
+                    label="Дата передачи в эксплуатацию"
+                    // clearable
+                    inputFormat="DD/MM/yyyy"
+                    value={values.commissioningdate}
+                    onChange={(value) =>
+                      setFieldValue("commissioningdate", value)
+                    }
                     renderInput={(params) => (
                       <TextFieldInput
                         {...params}

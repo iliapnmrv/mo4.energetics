@@ -38,7 +38,8 @@ export type IItem = {
   inventorynumber: string;
   supplier: string;
   name: string;
-  dateofdelivery: Date;
+  registrationdate: Date;
+  commissioningdate: Date;
   guaranteeperiod: Date;
   person_id?: number;
   status_id?: number;

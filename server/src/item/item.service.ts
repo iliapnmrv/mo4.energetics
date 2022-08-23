@@ -52,8 +52,8 @@ export class ItemService {
         delete keys[key];
       } else {
         if (
-          key === 'dateofdeliveryFrom' ||
-          key === 'dateofdeliveryTo' ||
+          key === 'registrationdateFrom' ||
+          key === 'registrationdateTo' ||
           key === 'guaranteeperiodFrom' ||
           key === 'guaranteeperiodTo'
         ) {
@@ -100,7 +100,9 @@ export class ItemService {
                 name: search ? { [Op.like]: `%${search}%` } : { [Op.ne]: null },
               },
               {
-                inventorynumber: search ? { [Op.like]: `%${search}%` } : { [Op.ne]: null },
+                inventorynumber: search
+                  ? { [Op.like]: `%${search}%` }
+                  : { [Op.ne]: null },
               },
               {
                 supplier: search
