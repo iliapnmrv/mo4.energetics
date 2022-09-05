@@ -29,21 +29,21 @@ export class RepairsService {
       {
         ...dto,
       },
-      { where: { requestnumber: id } },
+      { where: { id } },
     );
     return repair;
   }
 
-  async getRepair(requestnumber: number) {
+  async getRepair(id: number) {
     const repair = await this.repairRepository.findOne({
-      where: { requestnumber },
+      where: { id },
     });
     return repair;
   }
 
-  async deleteRepair(requestnumber: number) {
+  async deleteRepair(id: number) {
     const repair = await this.repairRepository.destroy({
-      where: { requestnumber },
+      where: { id },
     });
     return repair;
   }

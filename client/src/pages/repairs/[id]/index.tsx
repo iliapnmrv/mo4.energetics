@@ -77,7 +77,7 @@ const EditRepair = ({ repair }: Props) => {
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">
-          Удалить заявку на ремонт {router.query.id}?
+          Удалить заявку на ремонт {requestnumber}?
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
@@ -110,8 +110,6 @@ const EditRepair = ({ repair }: Props) => {
           price,
         }}
         onSubmit={(values, actions) => {
-          console.log(values);
-          //   saveData(values);
           saveRepair(values);
         }}
       >
@@ -125,7 +123,7 @@ const EditRepair = ({ repair }: Props) => {
           >
             <Form>
               <Typography variant="h4" component="h4">
-                Изменение заявки на ремонт №{router.query.id}
+                Изменение заявки на ремонт №{requestnumber}
               </Typography>
               <Grid container spacing={2}>
                 <Grid item xs={4}>

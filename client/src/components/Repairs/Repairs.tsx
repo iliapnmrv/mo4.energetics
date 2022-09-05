@@ -46,11 +46,11 @@ const RepairsComponent = ({ inventorynumber, Repairs }: Props) => {
 
   const [open, setOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState<boolean>(false);
-  const [requestnumber, setRequestnumber] = useState<number>();
+  const [repairId, setRepairId] = useState<number>();
   const router = useRouter();
 
   const deleteItem = async () => {
-    const response = await $api.delete(`repairs/${requestnumber}`);
+    const response = await $api.delete(`repairs/${repairId}`);
     setIsDeleteDialogOpen(false);
     router.push(`/${inventorynumber}`);
   };
@@ -64,12 +64,11 @@ const RepairsComponent = ({ inventorynumber, Repairs }: Props) => {
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">
-          Удалить заявку на ремонт {requestnumber}?
+          Удалить заявку на ремонт?
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Вы уверены, что хотите удалить ремонт с номером заявки{" "}
-            {requestnumber}?
+            Вы уверены, что хотите удалить ремонт?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -94,7 +93,6 @@ const RepairsComponent = ({ inventorynumber, Repairs }: Props) => {
         }}
       >
         Ремонты
-        {console.log(Repairs?.reduce((sum, { price }) => (sum += price), 0))}
         <Box
           sx={{
             fontSize: "15px",
@@ -147,8 +145,8 @@ const RepairsComponent = ({ inventorynumber, Repairs }: Props) => {
                     </IconButton>
                   </TableCell>
                   <TableCell>
-                    <Link href={`/repairs/${repair.requestnumber}`}>
-                      <a>{repair.requestnumber}</a>
+                    <Link href={`/repairs/${repair.id}`}>
+                      <a>{repair.id}</a>
                     </Link>
                   </TableCell>
                   <TableCell align="right">
@@ -174,7 +172,7 @@ const RepairsComponent = ({ inventorynumber, Repairs }: Props) => {
                         justifyContent: "space-around",
                       }}
                     >
-                      <Link href={`/repairs/${repair.requestnumber}`}>
+                      <Link href={`/repairs/${repair.id}`}>
                         <a>
                           <EditOutlinedIcon />
                         </a>
@@ -182,7 +180,7 @@ const RepairsComponent = ({ inventorynumber, Repairs }: Props) => {
                       <a
                         style={{ cursor: "pointer" }}
                         onClick={() => {
-                          setRequestnumber(repair.requestnumber);
+                          setRepairId(repair.id);
                           setIsDeleteDialogOpen(true);
                         }}
                       >
