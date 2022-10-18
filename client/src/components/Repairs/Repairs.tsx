@@ -146,7 +146,7 @@ const RepairsComponent = ({ inventorynumber, Repairs }: Props) => {
                   </TableCell>
                   <TableCell>
                     <Link href={`/repairs/${repair.id}`}>
-                      <a>{repair.id}</a>
+                      <a>{repair.requestnumber}</a>
                     </Link>
                   </TableCell>
                   <TableCell align="right">

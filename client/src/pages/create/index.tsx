@@ -24,10 +24,10 @@ type Props = {
 };
 
 const CreateItemSchema = Yup.object().shape({
-  person_id: Yup.string().required("Обязательное поле"),
-  status_id: Yup.string().required("Обязательное поле"),
-  type_id: Yup.string().required("Обязательное поле"),
-  place_id: Yup.string().required("Обязательное поле"),
+  person_id: Yup.string(),
+  status_id: Yup.string(),
+  type_id: Yup.string(),
+  place_id: Yup.string(),
 });
 
 export async function getServerSideProps({ query }: any) {
@@ -106,7 +106,6 @@ export default function Qr({ inventorynumber, names }: Props) {
                     placeholder="Поставщик"
                     component={TextField}
                     value={values.supplier}
-                    required
                   />
                 </Grid>
                 <Grid item xs={4}>
@@ -204,7 +203,6 @@ export default function Qr({ inventorynumber, names }: Props) {
                         {...params}
                         fullWidth
                         autoComplete="off"
-                        required
                       />
                     )}
                   />
@@ -221,7 +219,6 @@ export default function Qr({ inventorynumber, names }: Props) {
                       <TextFieldInput
                         {...params}
                         fullWidth
-                        required
                         autoComplete="off"
                       />
                     )}

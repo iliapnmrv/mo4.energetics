@@ -135,7 +135,6 @@ const EditRepair = ({ repair }: Props) => {
                     style={{
                       width: "100%",
                     }}
-                    disabled
                     component={TextField}
                   />
                 </Grid>
