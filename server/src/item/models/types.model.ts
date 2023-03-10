@@ -15,6 +15,7 @@ import { Item } from 'src/item/models/item.model';
   updatedAt: false,
 })
 export class Type extends Model<Type> {
+  @HasOne(() => Item, { foreignKey: 'type_id', as: 'Type' })
   @Column({
     type: DataType.INTEGER,
     unique: true,
@@ -23,14 +24,8 @@ export class Type extends Model<Type> {
   })
   id: number;
 
-  @HasOne(() => Item, { foreignKey: 'type_id', as: 'Type' })
-  @Column({
-    type: DataType.INTEGER,
-  })
-  typeId: number;
-
   @Column({
     type: DataType.STRING,
   })
-  typeName: string;
+  name: string;
 }

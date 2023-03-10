@@ -21,7 +21,8 @@ import ItemLayout from "layouts/ItemLayout";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { IRepairs } from "types/item";
-import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
+import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
+import { useGetCatalogsQuery } from "store/catalog/catalog.api";
 
 export async function getServerSideProps({ params }: any) {
   const { data: repair } = await $api.get(`repairs/${params.id}`);
@@ -39,6 +40,8 @@ type Props = {
 const EditRepair = ({ repair }: Props) => {
   const router = useRouter();
 
+  const { data: catalogs } = useGetCatalogsQuery();
+
   const {
     inventorynumber,
     requestnumber,
@@ -50,10 +53,6 @@ const EditRepair = ({ repair }: Props) => {
     comments,
     price,
   } = repair;
-
-  const { repairTypes, repairDecisions } = useAppSelector(
-    (state) => state.catalogsReducer
-  );
 
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState<boolean>(false);
 
@@ -148,10 +147,10 @@ const EditRepair = ({ repair }: Props) => {
                       label="Вид ремонта"
                       component={Select}
                     >
-                      {repairTypes.map((repair) => {
+                      {catalogs?.repairsTypes.map((repair) => {
                         return (
-                          <MenuItem value={repair.typeId} key={repair.typeId}>
-                            {repair.typeName}
+                          <MenuItem value={repair.id} key={repair.id}>
+                            {repair.name}
                           </MenuItem>
                         );
                       })}
@@ -168,13 +167,10 @@ const EditRepair = ({ repair }: Props) => {
                       label="Решение по ремонту"
                       component={Select}
                     >
-                      {repairDecisions.map((decision) => {
+                      {catalogs?.repairsDecisions.map((decision) => {
                         return (
-                          <MenuItem
-                            value={decision.decisionId}
-                            key={decision.decisionId}
-                          >
-                            {decision.decisionName}
+                          <MenuItem value={decision.id} key={decision.id}>
+                            {decision.name}
                           </MenuItem>
                         );
                       })}

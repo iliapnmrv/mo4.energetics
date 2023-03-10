@@ -27,6 +27,7 @@ import {
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import BuildOutlinedIcon from "@mui/icons-material/BuildOutlined";
 import DeleteButton from "components/Buttons/Delete";
+import { useGetCatalogsQuery } from "store/catalog/catalog.api";
 
 type Props = {
   row: IItem;
@@ -35,9 +36,7 @@ type Props = {
 export default function Row({ row }: Props) {
   const [open, setOpen] = useState(false);
 
-  const { persons, places, statuses, types, repairTypes } = useAppSelector(
-    (state) => state.catalogsReducer
-  );
+  const { data: catalogs } = useGetCatalogsQuery();
 
   const { isRepairs } = useAppSelector((state) => state.repairsReducer);
 
@@ -54,13 +53,11 @@ export default function Row({ row }: Props) {
           </IconButton>
         </TableCell>
         <TableCell>
-          <Link href={`/${row.inventorynumber}`}>
-            <a>{row.inventorynumber}</a>
-          </Link>
+          <Link href={`/${row.inventorynumber}`}>{row.inventorynumber} </Link>
         </TableCell>
-        <TableCell align="right">{row?.Type?.typeName}</TableCell>
+        <TableCell align="right">{row?.Type?.name}</TableCell>
         <TableCell scope="row">{row.name}</TableCell>
-        <TableCell align="right">{row?.Person?.personName}</TableCell>
+        <TableCell align="right">{row?.Person?.name}</TableCell>
         <TableCell align="right" colSpan={isRepairs ? 2 : 1}>
           {isRepairs ? (
             <>
@@ -77,14 +74,12 @@ export default function Row({ row }: Props) {
               <TableCell>{row?.Repairs?.[0]?.comments}</TableCell>
             </>
           ) : (
-            row?.Status?.statusName
+            row?.Status?.name
           )}
         </TableCell>
         <TableCell align="right">
           <Link href={`/${row.inventorynumber}`}>
-            <a>
-              <EditOutlinedIcon />
-            </a>
+            <EditOutlinedIcon />
           </Link>
         </TableCell>
       </TableRow>
@@ -107,9 +102,7 @@ export default function Row({ row }: Props) {
                     <Typography color="text.secondary" sx={{ fontSize: 14 }}>
                       Местоположение устройства
                     </Typography>
-                    <Typography variant="body2">
-                      {row?.Place?.placeName}
-                    </Typography>
+                    <Typography variant="body2">{row?.Place?.name}</Typography>
                   </CardContent>
                 </Card>
                 <Card variant="outlined" sx={{ border: "0px" }}>
@@ -126,7 +119,7 @@ export default function Row({ row }: Props) {
                       Дата поставки
                     </Typography>
                     <Typography variant="body2">
-                      {row.registrationdate}
+                      {moment(row.registrationdate).format("L")}
                     </Typography>
                   </CardContent>
                 </Card>
@@ -136,7 +129,7 @@ export default function Row({ row }: Props) {
                       Гарантийный срок
                     </Typography>
                     <Typography variant="body2">
-                      {row.guaranteeperiod}
+                      {moment(row.guaranteeperiod).format("L")}
                     </Typography>
                   </CardContent>
                 </Card>
@@ -158,11 +151,9 @@ export default function Row({ row }: Props) {
               width={"100%"}
             >
               <Link href={`/${row.inventorynumber}`}>
-                <a>
-                  <Button size="large" type="submit">
-                    Редактировать
-                  </Button>
-                </a>
+                <Button size="large" type="submit">
+                  Редактировать
+                </Button>
               </Link>
 
               <DeleteButton inventorynumber={row.inventorynumber} />

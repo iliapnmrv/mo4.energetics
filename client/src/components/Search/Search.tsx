@@ -1,6 +1,6 @@
 import { IconButton, InputBase, Paper } from "@mui/material";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
-import SearchIcon from "@mui/icons-material/Search";
+import { Search as SearchIcon } from "@mui/icons-material";
 
 type Props = {
   setSearch: Dispatch<SetStateAction<string>>;

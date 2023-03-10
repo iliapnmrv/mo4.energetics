@@ -3,14 +3,11 @@ import {
   Box,
   Button,
   Container,
-  IconButton,
-  Menu,
   Toolbar,
   Typography,
 } from "@mui/material";
-import React, { ReactNode } from "react";
-import MenuIcon from "@mui/icons-material/Menu";
 import Link from "next/link";
+import { ReactNode } from "react";
 
 type Props = {
   children: ReactNode;
@@ -32,7 +29,7 @@ const Layout = ({ children }: Props) => {
                 Документооборот
               </Typography>
             </Link>
-            <Link href={"/catalogs/persons"}>
+            <Link href={"/catalogs"}>
               <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
                 <Button sx={{ my: 2, color: "white", display: "block" }}>
                   Справочники

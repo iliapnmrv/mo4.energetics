@@ -1,13 +1,10 @@
-import React, { useState } from "react";
-import $api from "http/index";
-import { IItem } from "pages";
-import { Field, Form, Formik, FormikProps } from "formik";
-import { TextField, Select } from "formik-mui";
 import {
-  Button,
   Box,
+  Button,
   FormControl,
   Grid,
+  List,
+  ListItemText,
   MenuItem,
   Paper,
   Stack,
@@ -17,23 +14,25 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Typography,
   TextField as TextFieldInput,
-  ListItemText,
-  List,
+  Typography,
 } from "@mui/material";
-import ItemLayout from "layouts/ItemLayout";
-import { useAppDispatch, useAppSelector } from "hooks/redux";
-import { useRouter } from "next/router";
-import Link from "next/link";
-import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
-import _ from "lodash";
-import { ILogsCatalog, LOGS_CATALOG } from "constants/constants";
-import moment from "moment";
+import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import DeleteButton from "components/Buttons/Delete";
-import FileViewCaller from "components/FileView/FileViewDynamic";
 import FileViewDynamic from "components/FileView/FileViewDynamic";
 import RepairsComponent from "components/Repairs/Repairs";
+import { LOGS_CATALOG } from "constants/constants";
+import { Field, Form, Formik } from "formik";
+import { Select, TextField } from "formik-mui";
+import { useAppSelector } from "hooks/redux";
+import $api from "http/index";
+import ItemLayout from "layouts/ItemLayout";
+import _ from "lodash";
+import moment from "moment";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { IItem } from "pages";
+import { useGetCatalogsQuery } from "store/catalog/catalog.api";
 
 export async function getServerSideProps({ params }: any) {
   const { data } = await $api.get(`items/${params.id}`);
@@ -47,6 +46,8 @@ type Props = {
 };
 
 export default function Qr({ data }: Props) {
+  const { data: catalogs } = useGetCatalogsQuery();
+
   const {
     inventorynumber,
     commissioningdate,
@@ -61,6 +62,8 @@ export default function Qr({ data }: Props) {
     Repairs,
     registrationdate,
     guaranteeperiod,
+    receipt_from_repairs_date,
+    departure_from_repairs_date,
     Deregistration,
   } = data;
 
@@ -76,88 +79,25 @@ export default function Qr({ data }: Props) {
     registrationdate,
     guaranteeperiod,
     commissioningdate,
+    receipt_from_repairs_date,
+    departure_from_repairs_date,
   };
 
   const router = useRouter();
 
-  function changedKeys(o1: any, o2: any) {
-    var keys = _.union(_.keys(o1), _.keys(o2));
-    return _.filter(keys, function (key: any) {
-      return o1[key] !== o2[key];
-    });
-  }
-
-  const { persons, places, statuses, types, repairTypes, repairDecisions } =
-    useAppSelector((state) => state.catalogsReducer);
-
-  const catalogsNames: any = {
-    person_id: persons,
-    status_id: statuses,
-    type_id: types,
-    place_id: places,
-  };
-
   const saveData = async (values: IItem) => {
-    let action: string = "";
-
-    type changedValues = keyof typeof LOGS_CATALOG;
-
-    const logValues = changedKeys(initialState, values).map(
-      (changed: changedValues | string) => {
-        if (catalogsNames[changed]) {
-          //@ts-ignore
-          return (action += `${LOGS_CATALOG[changed]}: ${
-            //@ts-ignore
-            catalogsNames[changed][initialState[changed] - 1]?.[
-              changed.slice(0, -3) + "Name"
-            ]
-          } -> ${
-            //@ts-ignore
-            catalogsNames[changed][values[changed] - 1]?.[
-              changed.slice(0, -3) + "Name"
-            ]
-          }; `);
-        }
-        //@ts-ignore
-        action += `${LOGS_CATALOG[changed]}: ${
-          //@ts-ignore
-          new Date(initialState[changed]) > 0
-            ? //@ts-ignore
-              new Date(initialState[changed]).toLocaleDateString()
-            : //@ts-ignore
-              initialState[changed]
-        } -> ${
-          //@ts-ignore
-          new Date(initialState[changed]) > 0
-            ? //@ts-ignore
-              new Date(values[changed]).toLocaleDateString()
-            : //@ts-ignore
-              values[changed]
-        }; `;
-      }
-    );
-
-    const response = await $api.post(`items/${inventorynumber}`, values);
-    const logs = await $api.post(`logs/${inventorynumber}`, { action });
-    router.push("/");
+    try {
+      const response = await $api.post(`items/${inventorynumber}`, values);
+      router.push("/");
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   return (
     <ItemLayout>
       <Formik
-        initialValues={{
-          inventorynumber,
-          supplier,
-          name,
-          person_id,
-          status_id,
-          type_id,
-          place_id,
-          description,
-          registrationdate,
-          commissioningdate,
-          guaranteeperiod,
-        }}
+        initialValues={initialState}
         onSubmit={(values) => {
           saveData(values);
         }}
@@ -232,10 +172,10 @@ export default function Qr({ data }: Props) {
                       label="Номенкулатура устройства"
                       component={Select}
                     >
-                      {types.map((type) => {
+                      {catalogs?.types.map((type) => {
                         return (
-                          <MenuItem value={type.typeId} key={type.id}>
-                            {type.typeName}
+                          <MenuItem value={type.id} key={type.id}>
+                            {type.name}
                           </MenuItem>
                         );
                       })}
@@ -252,10 +192,10 @@ export default function Qr({ data }: Props) {
                       label="МОЛ"
                       component={Select}
                     >
-                      {persons.map((person) => {
+                      {catalogs?.persons.map((person) => {
                         return (
-                          <MenuItem value={person.personId} key={person.id}>
-                            {person.personName}
+                          <MenuItem value={person.id} key={person.id}>
+                            {person.name}
                           </MenuItem>
                         );
                       })}
@@ -324,10 +264,10 @@ export default function Qr({ data }: Props) {
                       label="Местоположение"
                       component={Select}
                     >
-                      {places.map((place) => {
+                      {catalogs?.places.map((place) => {
                         return (
-                          <MenuItem value={place.placeId} key={place.id}>
-                            {place.placeName}
+                          <MenuItem value={place.id} key={place.id}>
+                            {place.name}
                           </MenuItem>
                         );
                       })}
@@ -345,15 +285,51 @@ export default function Qr({ data }: Props) {
                       label="Статус"
                       component={Select}
                     >
-                      {statuses.map((status) => {
+                      {catalogs?.statuses.map((status) => {
                         return (
-                          <MenuItem value={status.statusId} key={status.id}>
-                            {status.statusName}
+                          <MenuItem value={status.id} key={status.id}>
+                            {status.name}
                           </MenuItem>
                         );
                       })}
                     </Field>
                   </FormControl>
+                </Grid>
+                <Grid item xs={4}>
+                  <DesktopDatePicker
+                    label="Дата прибытия из ремонта"
+                    // clearable
+                    inputFormat="DD/MM/yyyy"
+                    value={values.receipt_from_repairs_date ?? null}
+                    onChange={(value) =>
+                      setFieldValue("receipt_from_repairs_date", value)
+                    }
+                    renderInput={(params) => (
+                      <TextFieldInput
+                        {...params}
+                        fullWidth
+                        autoComplete="off"
+                      />
+                    )}
+                  />
+                </Grid>
+                <Grid item xs={4}>
+                  <DesktopDatePicker
+                    label="Дата отправки на участок из ремонта"
+                    // clearable
+                    inputFormat="DD/MM/yyyy"
+                    value={values.departure_from_repairs_date ?? null}
+                    onChange={(value) =>
+                      setFieldValue("departure_from_repairs_date", value)
+                    }
+                    renderInput={(params) => (
+                      <TextFieldInput
+                        {...params}
+                        fullWidth
+                        autoComplete="off"
+                      />
+                    )}
+                  />
                 </Grid>
                 <Grid item xs={12}>
                   <Stack
@@ -436,9 +412,7 @@ export default function Qr({ data }: Props) {
                       />
                     </List>
                     <Link href={`deregistration/${item.id}`}>
-                      <a>
-                        <Button variant="outlined">Редактировать</Button>
-                      </a>
+                      <Button variant="outlined">Редактировать</Button>
                     </Link>
                     {item?.attachments?.length ? (
                       <>

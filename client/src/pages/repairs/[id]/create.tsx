@@ -14,7 +14,8 @@ import $api from "http/index";
 import ItemLayout from "layouts/ItemLayout";
 import { useRouter } from "next/router";
 import React from "react";
-import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
+import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
+import { useGetCatalogsQuery } from "store/catalog/catalog.api";
 
 type Props = {};
 
@@ -27,7 +28,7 @@ export async function getServerSideProps({ params }: any) {
 const Create = (props: Props) => {
   const router = useRouter();
 
-  const { repairTypes } = useAppSelector((state) => state.catalogsReducer);
+  const { data: catalogs } = useGetCatalogsQuery();
 
   const saveRepair = async (values: any) => {
     const response = await $api.post(`repairs/${router.query.id}`, values);
@@ -83,10 +84,10 @@ const Create = (props: Props) => {
                       label="Вид ремонта"
                       component={Select}
                     >
-                      {repairTypes.map((repair) => {
+                      {catalogs?.repairsTypes.map((repair) => {
                         return (
-                          <MenuItem value={repair.typeId} key={repair.typeId}>
-                            {repair.typeName}
+                          <MenuItem value={repair.id} key={repair.id}>
+                            {repair.name}
                           </MenuItem>
                         );
                       })}

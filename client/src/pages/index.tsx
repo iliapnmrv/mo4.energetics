@@ -21,18 +21,10 @@ import {
   IType,
 } from "types/catalogs";
 import { useAppDispatch, useAppSelector } from "hooks/redux";
-import {
-  catalogsReducer,
-  setPersons,
-  setPlaces,
-  setRepairDecisions,
-  setRepairTypes,
-  setStatuses,
-  setTypes,
-} from "store/slices/catalogsSlice";
 import Link from "next/link";
 import Filters from "components/Filters/Filters";
 import Download from "components/Buttons/Download";
+import { ICatalog, useGetCatalogsQuery } from "store/catalog/catalog.api";
 
 export type IItem = {
   inventorynumber: string;
@@ -40,6 +32,8 @@ export type IItem = {
   name: string;
   registrationdate: Date;
   commissioningdate: Date;
+  departure_from_repairs_date?: Date;
+  receipt_from_repairs_date?: Date;
   guaranteeperiod: Date;
   person_id?: number;
   status_id?: number;
@@ -48,35 +42,19 @@ export type IItem = {
   description?: string;
   Repairs?: IRepairs[];
   Log?: ILogs[];
-  Place?: IPlace;
-  Status?: IStatus;
-  Type?: IType;
-  Person?: IPerson;
+  Place?: ICatalog;
+  Status?: ICatalog;
+  Type?: ICatalog;
+  Person?: ICatalog;
   Deregistration?: IDeregistration[];
 };
 
 export async function getServerSideProps() {
   const { data: rows } = await $api.get<IItem[]>(`items`);
-  const { data: persons } = await $api.get<IPerson[]>(`catalogs/persons`);
-  const { data: places } = await $api.get<IPlace[]>(`catalogs/places`);
-  const { data: statuses } = await $api.get<IStatus[]>(`catalogs/statuses`);
-  const { data: types } = await $api.get<IType[]>(`catalogs/types`);
-  const { data: repairsTypes } = await $api.get<IRepairType[]>(
-    `catalogs/repairsTypes`
-  );
-  const { data: repairsDecisions } = await $api.get<IRepairType[]>(
-    `catalogs/repairsDecisions`
-  );
   return {
     props: {
       rows,
-      persons,
-      places,
-      statuses,
-      types,
-      repairsTypes,
-      repairsDecisions,
-    }, // will be passed to the page component as props
+    },
   };
 }
 
@@ -90,23 +68,8 @@ type Props = {
   repairsDecisions: IRepairDecision[];
 };
 
-const Home: React.FC<Props> = ({
-  rows,
-  persons,
-  places,
-  statuses,
-  types,
-  repairsTypes,
-  repairsDecisions,
-}: Props) => {
+const Home: React.FC<Props> = ({ rows }: Props) => {
   const [items, setItems] = useState<IItem[]>(rows);
-  const dispatch = useAppDispatch();
-  dispatch(setPersons(persons));
-  dispatch(setPlaces(places));
-  dispatch(setStatuses(statuses));
-  dispatch(setTypes(types));
-  dispatch(setRepairTypes(repairsTypes));
-  dispatch(setRepairDecisions(repairsDecisions));
 
   const { isRepairs } = useAppSelector((state) => state.repairsReducer);
 

@@ -1,6 +1,4 @@
 const nextConfig = {
-    reactStrictMode: true,
-    dir: './src',
     basePath: '/energetics',
     async redirects() {
         return [{

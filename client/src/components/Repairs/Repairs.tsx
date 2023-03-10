@@ -1,3 +1,7 @@
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import {
   Box,
   Button,
@@ -21,19 +25,14 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
+import { useAppSelector } from "hooks/redux";
+import $api from "http/index";
 import moment from "moment";
 import Link from "next/link";
-import React, { useState } from "react";
-import { IRepairs } from "types/item";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-import BuildOutlinedIcon from "@mui/icons-material/BuildOutlined";
-import DeleteButton from "components/Buttons/Delete";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import { useAppSelector } from "hooks/redux";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import $api from "http/index";
 import { useRouter } from "next/router";
+import { useState } from "react";
+import { useGetCatalogsQuery } from "store/catalog/catalog.api";
+import { IRepairs } from "types/item";
 
 type Props = {
   inventorynumber: string;
@@ -41,8 +40,7 @@ type Props = {
 };
 
 const RepairsComponent = ({ inventorynumber, Repairs }: Props) => {
-  const { persons, places, statuses, types, repairTypes, repairDecisions } =
-    useAppSelector((state) => state.catalogsReducer);
+  const { data: catalogs } = useGetCatalogsQuery();
 
   const [open, setOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState<boolean>(false);
@@ -160,9 +158,9 @@ const RepairsComponent = ({ inventorynumber, Repairs }: Props) => {
                   <TableCell align="right">{repair.price}</TableCell>
                   <TableCell align="right">
                     {
-                      repairDecisions.filter(
-                        (decision) => decision.decisionId === repair.decision_id
-                      )[0]?.decisionName
+                      catalogs?.repairsDecisions.filter(
+                        (decision) => decision.id === repair.decision_id
+                      )[0]?.name
                     }
                   </TableCell>
                   <TableCell align="right">
@@ -216,9 +214,9 @@ const RepairsComponent = ({ inventorynumber, Repairs }: Props) => {
                               </Typography>
                               <Typography variant="body2">
                                 {
-                                  repairTypes.filter(
-                                    (type) => type.typeId === repair.type_id
-                                  )[0]?.typeName
+                                  catalogs?.repairsTypes.filter(
+                                    (type) => type.id === repair.type_id
+                                  )[0]?.name
                                 }
                               </Typography>
                             </CardContent>

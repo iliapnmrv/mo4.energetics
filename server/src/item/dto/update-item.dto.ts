@@ -3,9 +3,12 @@ export type UpdateItemDto = {
   registrationdate?: Date;
   guaranteeperiod?: Date;
   supplier?: string;
-  placeId?: number;
-  personId?: number;
-  statusId?: number;
-  typeId?: number;
+  commissioningdate: Date;
+  place_id?: number;
+  person_id?: number;
+  status_id?: number;
+  type_id?: number;
   description?: string;
+  departure_from_repairs_date?: Date;
+  receipt_from_repairs_date?: Date;
 };

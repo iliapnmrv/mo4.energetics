@@ -14,6 +14,7 @@ import { Repair } from './repairs.model';
   updatedAt: false,
 })
 export class RepairsDecision extends Model<RepairsDecision> {
+  @HasOne(() => Repair, { foreignKey: 'decision_id', as: 'RepairsDecision' })
   @Column({
     type: DataType.INTEGER,
     unique: true,
@@ -22,14 +23,8 @@ export class RepairsDecision extends Model<RepairsDecision> {
   })
   id: number;
 
-  @HasOne(() => Repair, { foreignKey: 'decision_id', as: 'RepairsDecision' })
-  @Column({
-    type: DataType.INTEGER,
-  })
-  decisionId: number;
-
   @Column({
     type: DataType.STRING,
   })
-  decisionName: string;
+  name: string;
 }

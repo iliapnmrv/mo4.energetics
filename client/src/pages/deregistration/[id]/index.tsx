@@ -1,28 +1,25 @@
+import CloseIcon from "@mui/icons-material/Close";
 import {
   Box,
   Button,
-  FormControl,
-  Grid,
-  MenuItem,
-  Typography,
-  TextField as TextFieldInput,
-  Stack,
-  Paper,
   Dialog,
-  DialogTitle,
+  DialogActions,
   DialogContent,
   DialogContentText,
-  DialogActions,
+  DialogTitle,
+  Grid,
+  Paper,
+  Stack,
+  TextField as TextFieldInput,
+  Typography,
 } from "@mui/material";
+import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import { Field, FieldArray, Form, Formik } from "formik";
-import { Select, TextField } from "formik-mui";
-import { useAppSelector } from "hooks/redux";
+import { TextField } from "formik-mui";
 import $api from "http/index";
 import ItemLayout from "layouts/ItemLayout";
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
-import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
-import CloseIcon from "@mui/icons-material/Close";
+import React, { useState } from "react";
 import { IDeregistration, IFile } from "types/item";
 
 export async function getServerSideProps({ params }: any) {

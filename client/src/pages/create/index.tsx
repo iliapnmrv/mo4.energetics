@@ -15,8 +15,9 @@ import {
 import ItemLayout from "layouts/ItemLayout";
 import { useAppDispatch, useAppSelector } from "hooks/redux";
 import { useRouter } from "next/router";
-import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
+import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import * as Yup from "yup";
+import { useGetCatalogsQuery } from "store/catalog/catalog.api";
 
 type Props = {
   inventorynumber: number;
@@ -48,15 +49,14 @@ export async function getServerSideProps({ query }: any) {
 export default function Qr({ inventorynumber, names }: Props) {
   console.log(names);
 
+  const { data: catalogs } = useGetCatalogsQuery();
+
   const router = useRouter();
   const saveData = async (values: any) => {
     const response = await $api.post(`items`, values);
     router.push("/");
   };
 
-  const { persons, places, statuses, types, repairTypes } = useAppSelector(
-    (state) => state.catalogsReducer
-  );
   return (
     <ItemLayout>
       <Formik
@@ -72,6 +72,8 @@ export default function Qr({ inventorynumber, names }: Props) {
           registrationdate: null,
           commissioningdate: null,
           guaranteeperiod: null,
+          departure_from_repairs_date: null,
+          receipt_from_repairs_date: null,
         }}
         validationSchema={CreateItemSchema}
         onSubmit={(values) => {
@@ -118,10 +120,10 @@ export default function Qr({ inventorynumber, names }: Props) {
                       label="Номенкулатура устройства"
                       component={Select}
                     >
-                      {types.map((type) => {
+                      {catalogs?.types.map((type) => {
                         return (
-                          <MenuItem value={type.typeId} key={type.id}>
-                            {type.typeName}
+                          <MenuItem value={type.id} key={type.id}>
+                            {type.name}
                           </MenuItem>
                         );
                       })}
@@ -151,7 +153,7 @@ export default function Qr({ inventorynumber, names }: Props) {
                 </Grid>
 
                 <Grid item xs={4}>
-                  <FormControl fullWidth>
+                  <FormControl fullWidth required>
                     <Field
                       width={100}
                       as="select"
@@ -160,10 +162,10 @@ export default function Qr({ inventorynumber, names }: Props) {
                       label="МОЛ"
                       component={Select}
                     >
-                      {persons.map((person) => {
+                      {catalogs?.persons.map((person) => {
                         return (
-                          <MenuItem value={person.personId} key={person.id}>
-                            {person.personName}
+                          <MenuItem value={person.id} key={person.id}>
+                            {person.name}
                           </MenuItem>
                         );
                       })}
@@ -234,10 +236,10 @@ export default function Qr({ inventorynumber, names }: Props) {
                       label="Статус"
                       component={Select}
                     >
-                      {statuses.map((status) => {
+                      {catalogs?.statuses.map((status) => {
                         return (
-                          <MenuItem value={status.statusId} key={status.id}>
-                            {status.statusName}
+                          <MenuItem value={status.id} key={status.id}>
+                            {status.name}
                           </MenuItem>
                         );
                       })}
@@ -267,15 +269,51 @@ export default function Qr({ inventorynumber, names }: Props) {
                       label="Место нахождения"
                       component={Select}
                     >
-                      {places.map((place) => {
+                      {catalogs?.places.map((place) => {
                         return (
-                          <MenuItem value={place.placeId} key={place.id}>
-                            {place.placeName}
+                          <MenuItem value={place.id} key={place.id}>
+                            {place.name}
                           </MenuItem>
                         );
                       })}
                     </Field>
                   </FormControl>
+                </Grid>
+                <Grid item xs={4}>
+                  <DesktopDatePicker
+                    label="Дата прибытия из ремонта"
+                    // clearable
+                    inputFormat="DD/MM/yyyy"
+                    value={values.receipt_from_repairs_date}
+                    onChange={(value) =>
+                      setFieldValue("receipt_from_repairs_date", value)
+                    }
+                    renderInput={(params) => (
+                      <TextFieldInput
+                        {...params}
+                        fullWidth
+                        autoComplete="off"
+                      />
+                    )}
+                  />
+                </Grid>
+                <Grid item xs={4}>
+                  <DesktopDatePicker
+                    label="Дата отправки на участок из ремонта"
+                    // clearable
+                    inputFormat="DD/MM/yyyy"
+                    value={values.departure_from_repairs_date}
+                    onChange={(value) =>
+                      setFieldValue("departure_from_repairs_date", value)
+                    }
+                    renderInput={(params) => (
+                      <TextFieldInput
+                        {...params}
+                        fullWidth
+                        autoComplete="off"
+                      />
+                    )}
+                  />
                 </Grid>
 
                 <Button

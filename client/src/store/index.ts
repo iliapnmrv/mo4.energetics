@@ -1,40 +1,38 @@
 import { configureStore } from "@reduxjs/toolkit";
-import storage from "redux-persist/lib/storage";
 import { Action, combineReducers } from "redux";
-import { persistReducer } from "redux-persist";
+import { FLUSH, REHYDRATE, persistReducer } from "redux-persist";
+import storage from "redux-persist/lib/storage";
 import thunk, { ThunkAction } from "redux-thunk";
-import { useDispatch } from "react-redux";
-import { catalogsReducer } from "./slices/catalogsSlice";
+import { catalogApi } from "./catalog/catalog.api";
 import { repairsReducer } from "./slices/repairsSlice";
+import { setupListeners } from "@reduxjs/toolkit/dist/query";
+import { PAUSE, PERSIST, PURGE, REGISTER } from "redux-persist";
 
 const reducers = combineReducers({
-  catalogsReducer,
+  [catalogApi.reducerPath]: catalogApi.reducer,
   repairsReducer,
 });
 
 const persistConfig = {
   key: "root",
   storage,
+  blacklist: [catalogApi.reducerPath],
 };
 
 const persistedReducer = persistReducer(persistConfig, reducers);
 
-export const setupStore = () => {
-  return configureStore({
-    reducer: persistedReducer,
-    devTools: process.env.NODE_ENV !== "production",
-    middleware: [thunk],
-  });
-};
-
-const store = configureStore({
+export const store = configureStore({
   reducer: persistedReducer,
-  devTools: process.env.NODE_ENV !== "production",
-  middleware: [thunk],
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      },
+    }).concat([catalogApi.middleware]),
 });
 
+setupListeners(store.dispatch);
+
 export default store;
-export type AppStore = ReturnType<typeof setupStore>;
-export type AppThunk = ThunkAction<void, RootState, unknown, Action>;
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;

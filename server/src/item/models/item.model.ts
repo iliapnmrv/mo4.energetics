@@ -21,6 +21,8 @@ interface ItemCreationAttrs {
   inventorynumber: number;
   registrationdate: Date;
   commissioningdate: Date;
+  departure_from_repairs_date: Date;
+  receipt_from_repairs_date: Date;
   guaranteeperiod: Date;
   supplier: string;
   type_id: number;
@@ -73,6 +75,18 @@ export class Item extends Model implements ItemCreationAttrs {
     type: DataType.DATEONLY,
   })
   registrationdate: Date;
+
+  @Column({
+    type: DataType.DATEONLY,
+    allowNull: true,
+  })
+  receipt_from_repairs_date: Date;
+
+  @Column({
+    type: DataType.DATEONLY,
+    allowNull: true,
+  })
+  departure_from_repairs_date: Date;
 
   @Column({
     type: DataType.DATEONLY,

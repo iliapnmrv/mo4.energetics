@@ -4,6 +4,8 @@ export const LOGS_CATALOG = {
   name: "Наименование",
   registrationdate: "Дата доставки",
   guaranteeperiod: "Гарантивный срок",
+  receipt_from_repairs_date: "Дата прибытия из ремонта",
+  departure_from_repairs_date: "Дата отправки на участок из ремонта",
   person_id: "МОЛ",
   status_id: "Статус",
   type_id: "Номенкулатура",
@@ -13,40 +15,27 @@ export const LOGS_CATALOG = {
 
 export const CatalogsNames = {
   statuses: {
-    id: "statusId",
+    id: "id",
     name: "statusName",
   },
   places: {
-    id: "placeId",
+    id: "id",
     name: "placeName",
   },
   types: {
-    id: "typeId",
+    id: "id",
     name: "typeName",
   },
   persons: {
-    id: "personId",
+    id: "id",
     name: "personName",
   },
   repairsTypes: {
-    id: "typeId",
+    id: "id",
     name: "typeName",
   },
   repairsDecisions: {
-    id: "decisionId",
+    id: "id",
     name: "decisionName",
   },
 };
-
-export interface ILogsCatalog {
-  inventorynumber: string;
-  supplier: string;
-  name: string;
-  registrationdate: string;
-  guaranteeperiod: string;
-  person_id: string;
-  status_id: string;
-  type_id: string;
-  place_id: string;
-  description: string;
-}

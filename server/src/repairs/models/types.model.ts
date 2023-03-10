@@ -13,7 +13,8 @@ import { Repair } from './repairs.model';
   createdAt: false,
   updatedAt: false,
 })
-export class RepairsType extends Model<RepairsType> {
+export class RepairsType extends Model {
+  @HasOne(() => Repair, { foreignKey: 'type_id', as: 'RepairsType' })
   @Column({
     type: DataType.INTEGER,
     unique: true,
@@ -22,14 +23,8 @@ export class RepairsType extends Model<RepairsType> {
   })
   id: number;
 
-  @HasOne(() => Repair, { foreignKey: 'type_id', as: 'RepairsType' })
-  @Column({
-    type: DataType.INTEGER,
-  })
-  typeId: number;
-
   @Column({
     type: DataType.STRING,
   })
-  typeName: string;
+  name: string;
 }

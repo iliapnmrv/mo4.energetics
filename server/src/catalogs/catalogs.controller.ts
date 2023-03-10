@@ -1,36 +1,57 @@
 import {
-  Body,
   Controller,
-  Delete,
   Get,
-  Param,
   Post,
-  Put,
+  Body,
+  Patch,
+  Param,
+  Delete,
 } from '@nestjs/common';
-import { CatalogsService } from './catalogs.service';
+import { CreateCatalogDto } from './dto/create-catalog.dto';
+import { UpdateCatalogDto } from './dto/update-catalog.dto';
+import { CatalogService } from './catalogs.service';
 
-@Controller('catalogs')
-export class CatalogsController {
-  constructor(private service: CatalogsService) {}
+export type ICatalogs =
+  | 'persons'
+  | 'statuses'
+  | 'places'
+  | 'types'
+  | 'repairsTypes'
+  | 'repairsDecisions';
 
-  @Get('/:catalog')
-  getCatalogs(@Param('catalog') catalog: string) {
-    return this.service.getCatalog(catalog);
-  }
-  @Post('/:catalog')
-  createCatalog(@Param('catalog') catalog: string, @Body() catalogDto: any) {
-    return this.service.createCatalogItem(catalog, catalogDto);
-  }
-  @Put('/:catalog/:id')
-  updateCatalog(
-    @Param('catalog') catalog: string,
-    @Param('id') id: string,
-    @Body() catalogDto: any,
+@Controller('catalog')
+export class CatalogController {
+  constructor(private readonly catalogService: CatalogService) {}
+
+  @Post(':catalog')
+  create(
+    @Body() createCatalogDto: CreateCatalogDto,
+    @Param('catalog') catalog: ICatalogs,
   ) {
-    return this.service.updateCatalogItem(catalog, id, catalogDto);
+    return this.catalogService.create(catalog, createCatalogDto);
   }
-  @Delete('/:catalog/:id')
-  deleteCatalog(@Param('catalog') catalog: string, @Param('id') id: string) {
-    return this.service.deleteCatalogItem(catalog, id);
+
+  @Get()
+  findAll() {
+    return this.catalogService.findAll();
+  }
+
+  @Get(':catalog')
+  findByName(@Param('catalog') catalog: ICatalogs) {
+    return this.catalogService.findOne(catalog);
+  }
+
+  @Patch(':catalog/:id')
+  update(
+    @Param('id') id: string,
+    @Param('catalog') catalog: ICatalogs,
+    @Body() updateCatalogDto: UpdateCatalogDto,
+  ) {
+    return this.catalogService.update(catalog, +id, updateCatalogDto);
+  }
+
+  @Delete(':catalog/:id')
+  remove(@Param('id') id: string, @Param('catalog') catalog: ICatalogs) {
+    return this.catalogService.remove(catalog, +id);
   }
 }

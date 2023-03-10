@@ -29,21 +29,20 @@ import { useAppDispatch, useAppSelector } from "hooks/redux";
 import Search from "components/Search/Search";
 import $api from "http/index";
 import { IItem } from "pages";
-import { DateRangePicker, DesktopDatePicker } from "@mui/lab";
-import { setIsRepairs } from "store/slices/repairsSlice";
+import { DesktopDatePicker } from "@mui/x-date-pickers";
+import { setIsRepairs, setSearch } from "store/slices/repairsSlice";
+import { useGetCatalogsQuery } from "store/catalog/catalog.api";
 
 type Props = {
   setItems: Dispatch<SetStateAction<IItem[]>>;
 };
 
 const Filters = ({ setItems }: Props) => {
-  const { persons, places, statuses, types, repairTypes, repairDecisions } =
-    useAppSelector((state) => state.catalogsReducer);
-  const { isRepairs } = useAppSelector((state) => state.repairsReducer);
+  const { data: catalogs } = useGetCatalogsQuery();
+
+  const { isRepairs, search } = useAppSelector((state) => state.repairsReducer);
 
   const dispatch = useAppDispatch();
-
-  const [search, setSearch] = useState("");
 
   const filterItems = async (values?: any) => {
     const { data } = await $api.get(
@@ -70,7 +69,11 @@ const Filters = ({ setItems }: Props) => {
             onChange={() => dispatch(setIsRepairs(!isRepairs))}
           />
         </FormGroup>
-        <Search search={search} setSearch={setSearch} />
+        <Search
+          search={search}
+          //@ts-ignore
+          setSearch={(search) => dispatch(setSearch(search))}
+        />
         <Accordion>
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
@@ -111,9 +114,9 @@ const Filters = ({ setItems }: Props) => {
                           component={Select}
                           multiple
                         >
-                          {types.map((type) => (
-                            <MenuItem value={type.typeId} key={type.id}>
-                              {type.typeName}
+                          {catalogs?.types.map((type) => (
+                            <MenuItem value={type.id} key={type.id}>
+                              {type.name}
                             </MenuItem>
                           ))}
                         </Field>
@@ -131,9 +134,9 @@ const Filters = ({ setItems }: Props) => {
                           component={Select}
                           multiple
                         >
-                          {statuses.map((status) => (
-                            <MenuItem value={status.statusId} key={status.id}>
-                              {status.statusName}
+                          {catalogs?.statuses.map((status) => (
+                            <MenuItem value={status.id} key={status.id}>
+                              {status.name}
                             </MenuItem>
                           ))}
                         </Field>
@@ -230,9 +233,9 @@ const Filters = ({ setItems }: Props) => {
                           component={Select}
                           multiple
                         >
-                          {persons.map((person) => (
-                            <MenuItem value={person.personId} key={person.id}>
-                              {person.personName}
+                          {catalogs?.persons.map((person) => (
+                            <MenuItem value={person.id} key={person.id}>
+                              {person.name}
                             </MenuItem>
                           ))}
                         </Field>
@@ -250,9 +253,9 @@ const Filters = ({ setItems }: Props) => {
                           component={Select}
                           multiple
                         >
-                          {places.map((place) => (
-                            <MenuItem value={place.placeId} key={place.id}>
-                              {place.placeName}
+                          {catalogs?.places.map((place) => (
+                            <MenuItem value={place.id} key={place.id}>
+                              {place.name}
                             </MenuItem>
                           ))}
                         </Field>

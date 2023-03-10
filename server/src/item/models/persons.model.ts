@@ -16,6 +16,7 @@ import { Item } from 'src/item/models/item.model';
   updatedAt: false,
 })
 export class Person extends Model<Person> {
+  @HasOne(() => Item, { foreignKey: 'person_id', as: 'Person' })
   @Column({
     type: DataType.INTEGER,
     unique: true,
@@ -24,15 +25,8 @@ export class Person extends Model<Person> {
   })
   id: number;
 
-  @HasOne(() => Item, { foreignKey: 'person_id', as: 'Person' })
-  @Column({
-    type: DataType.INTEGER,
-    primaryKey: true,
-  })
-  personId: number;
-
   @Column({
     type: DataType.STRING,
   })
-  personName: string;
+  name: string;
 }
