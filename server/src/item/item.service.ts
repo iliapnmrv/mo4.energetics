@@ -27,25 +27,7 @@ export class ItemService {
     private catalogService: CatalogService,
   ) {}
 
-  async getAll(): Promise<any> {
-    return await this.itemsRepository.findAll({
-      // person_id: { personName: 1 },
-      include: [
-        { model: Person, as: 'Person' },
-        { model: Status, as: 'Status' },
-        { model: Type, as: 'Type' },
-        { model: Place, as: 'Place' },
-        { model: Log, as: 'Log' },
-        { model: Repair, as: 'Repairs' },
-      ],
-      order: [
-        ['inventorynumber', 'ASC'],
-        [{ model: Log, as: 'Log' }, 'createdAt', 'ASC'],
-      ],
-    });
-  }
-
-  async filterItems(keys: { [key: string]: any }, search = '') {
+  async getAll(keys: { [key: string]: any }, search = '') {
     console.log(keys);
 
     for (const key in keys) {

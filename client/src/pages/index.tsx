@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { FC, useState } from "react";
 import Paper from "@mui/material/Paper";
 import { Box } from "@mui/system";
 import { Button, Fab, Typography } from "@mui/material";
@@ -12,22 +12,17 @@ import AddIcon from "@mui/icons-material/Add";
 import Row from "../components/Table/Row";
 import $api from "../http";
 import { IDeregistration, ILogs, IRepairs } from "../types/item";
-import {
-  IPerson,
-  IPlace,
-  IRepairDecision,
-  IRepairType,
-  IStatus,
-  IType,
-} from "types/catalogs";
 import { useAppDispatch, useAppSelector } from "hooks/redux";
 import Link from "next/link";
 import Filters from "components/Filters/Filters";
 import Download from "components/Buttons/Download";
 import { ICatalog, useGetCatalogsQuery } from "store/catalog/catalog.api";
+import { useGetItemsQuery } from "store/item/item.api";
+import useDebounce from "hooks/debounce";
 
 export type IItem = {
-  inventorynumber: string;
+  id: number;
+  inventorynumber: number;
   supplier: string;
   name: string;
   registrationdate: Date;
@@ -49,36 +44,25 @@ export type IItem = {
   Deregistration?: IDeregistration[];
 };
 
-export async function getServerSideProps() {
-  const { data: rows } = await $api.get<IItem[]>(`items`);
-  return {
-    props: {
-      rows,
-    },
-  };
-}
+const Home: FC = () => {
+  const [filters, setFilters] = useState({});
 
-type Props = {
-  rows: IItem[];
-  persons: IPerson[];
-  places: IPlace[];
-  statuses: IStatus[];
-  types: IType[];
-  repairsTypes: IRepairType[];
-  repairsDecisions: IRepairDecision[];
-};
+  const { isRepairs, search } = useAppSelector((state) => state.repairsReducer);
 
-const Home: React.FC<Props> = ({ rows }: Props) => {
-  const [items, setItems] = useState<IItem[]>(rows);
+  const debouncedSearch = useDebounce(search, 500);
 
-  const { isRepairs } = useAppSelector((state) => state.repairsReducer);
+  const { data: items } = useGetItemsQuery({
+    status_id: isRepairs ? [2] : [],
+    ...filters,
+    search: debouncedSearch,
+  });
 
   return (
     <>
       <Box sx={{ position: "relative" }}>
-        <Filters setItems={setItems} />
+        <Filters setFilters={setFilters} />
 
-        {items.length ? (
+        {items?.length ? (
           <TableContainer
             component={Paper}
             sx={{ overflowX: "initial", position: "sticky" }}
@@ -139,7 +123,8 @@ const Home: React.FC<Props> = ({ rows }: Props) => {
           href={{
             pathname: "/create",
             query: {
-              inventorynumber: rows[rows.length - 1]?.inventorynumber + 1,
+              inventorynumber:
+                (items?.[items?.length - 1]?.inventorynumber ?? 0) + 1,
             },
           }}
           passHref

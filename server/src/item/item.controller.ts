@@ -15,23 +15,18 @@ import { ItemService } from './item.service';
 export class ItemController {
   constructor(private service: ItemService) {}
 
-  @Get('/filter')
+  @Get('')
   filterItems(
     @Query('search') search: string,
     @Query() keys: { [key: string]: any },
   ) {
     delete keys['search'];
-    return this.service.filterItems(keys, search);
+    return this.service.getAll(keys, search);
   }
 
   @Get(':id')
   getOne(@Param() params) {
     return this.service.getOne(params.id);
-  }
-
-  @Get()
-  getAll() {
-    return this.service.getAll();
   }
 
   @Post(':id')

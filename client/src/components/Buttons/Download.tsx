@@ -4,9 +4,10 @@ import * as XLSX from "xlsx";
 import moment from "moment";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import { Box, Button, Fab } from "@mui/material";
+import { IItem } from "pages";
 
 type Props = {
-  items: any[];
+  items?: IItem[];
 };
 
 const Download = ({ items }: Props) => {
@@ -24,6 +25,9 @@ const Download = ({ items }: Props) => {
         "status",
         "place",
         "description",
+        "departure_from_repairs_date",
+        "receipt_from_repairs_date",
+        "commissioningdate",
       ],
       skipHeader: true,
     });
@@ -41,6 +45,9 @@ const Download = ({ items }: Props) => {
         "status",
         "place",
         "description",
+        "departure_from_repairs_date",
+        "receipt_from_repairs_date",
+        "commissioningdate",
       ],
       skipHeader: true,
       origin: -1, //ok
@@ -68,6 +75,9 @@ const Download = ({ items }: Props) => {
       status: "Статус",
       place: "Местоположение",
       description: "Описание",
+      departure_from_repairs_date: "Дата отправки на участок из ремонта",
+      receipt_from_repairs_date: "Дата прибытия из ремонта",
+      commissioningdate: "Дата передачи в эксплуатацию",
     },
   ];
 
@@ -80,19 +90,22 @@ const Download = ({ items }: Props) => {
     <Box
       onClick={(e) =>
         exportToCSV(
-          items.map((item) => ({
+          items?.map((item) => ({
             id: item.id,
             name: item.name,
             inventorynumber: item.inventorynumber,
             registrationdate: item.registrationdate,
             guaranteeperiod: item.guaranteeperiod,
             supplier: item.supplier,
-            type: item?.Type?.typeName || null,
-            place: item?.Place?.placeName || null,
-            person: item?.Person?.personName || null,
-            status: item?.Status?.statusName || null,
+            type: item?.Type?.name || null,
+            place: item?.Place?.name || null,
+            person: item?.Person?.name || null,
+            status: item?.Status?.name || null,
             description: item.description,
-          })),
+            departure_from_repairs_date: item.departure_from_repairs_date,
+            receipt_from_repairs_date: item.receipt_from_repairs_date,
+            commissioningdate: item.commissioningdate,
+          })) ?? [],
           String(moment()),
           wscols
         )

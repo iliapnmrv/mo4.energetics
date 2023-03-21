@@ -7,16 +7,18 @@ import { catalogApi } from "./catalog/catalog.api";
 import { repairsReducer } from "./slices/repairsSlice";
 import { setupListeners } from "@reduxjs/toolkit/dist/query";
 import { PAUSE, PERSIST, PURGE, REGISTER } from "redux-persist";
+import { itemApi } from "./item/item.api";
 
 const reducers = combineReducers({
   [catalogApi.reducerPath]: catalogApi.reducer,
+  [itemApi.reducerPath]: itemApi.reducer,
   repairsReducer,
 });
 
 const persistConfig = {
   key: "root",
   storage,
-  blacklist: [catalogApi.reducerPath],
+  blacklist: [catalogApi.reducerPath, itemApi.reducerPath],
 };
 
 const persistedReducer = persistReducer(persistConfig, reducers);
@@ -28,7 +30,7 @@ export const store = configureStore({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
-    }).concat([catalogApi.middleware]),
+    }).concat([catalogApi.middleware, itemApi.middleware]),
 });
 
 setupListeners(store.dispatch);

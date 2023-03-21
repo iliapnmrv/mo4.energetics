@@ -1,43 +1,34 @@
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
+  Box,
   Button,
-  Chip,
+  Checkbox,
   FormControl,
+  FormControlLabel,
+  FormGroup,
   Grid,
   MenuItem,
   Stack,
-  Typography,
   TextField as TextFieldInput,
-  Box,
-  FormGroup,
-  FormControlLabel,
-  Checkbox,
+  Typography,
 } from "@mui/material";
-import { TextField, Select } from "formik-mui";
-import React, {
-  Dispatch,
-  SetStateAction,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { Field, Form, Formik } from "formik";
-import { useAppDispatch, useAppSelector } from "hooks/redux";
-import Search from "components/Search/Search";
-import $api from "http/index";
-import { IItem } from "pages";
 import { DesktopDatePicker } from "@mui/x-date-pickers";
-import { setIsRepairs, setSearch } from "store/slices/repairsSlice";
+import Search from "components/Search/Search";
+import { Field, Form, Formik } from "formik";
+import { Select } from "formik-mui";
+import { useAppDispatch, useAppSelector } from "hooks/redux";
+import { Dispatch, SetStateAction, useEffect } from "react";
 import { useGetCatalogsQuery } from "store/catalog/catalog.api";
+import { setIsRepairs, setSearch } from "store/slices/repairsSlice";
 
 type Props = {
-  setItems: Dispatch<SetStateAction<IItem[]>>;
+  setFilters: Dispatch<SetStateAction<Record<string, any>>>;
 };
 
-const Filters = ({ setItems }: Props) => {
+const Filters = ({ setFilters }: Props) => {
   const { data: catalogs } = useGetCatalogsQuery();
 
   const { isRepairs, search } = useAppSelector((state) => state.repairsReducer);
@@ -45,19 +36,8 @@ const Filters = ({ setItems }: Props) => {
   const dispatch = useAppDispatch();
 
   const filterItems = async (values?: any) => {
-    const { data } = await $api.get(
-      `items/filter/?${new URLSearchParams(values).toString()}&search=${search}`
-    );
-    setItems(data);
+    setFilters(values);
   };
-
-  useEffect(() => {
-    if (isRepairs) {
-      filterItems({ status_id: [2] });
-    } else {
-      filterItems();
-    }
-  }, [search, isRepairs]);
 
   return (
     <>
